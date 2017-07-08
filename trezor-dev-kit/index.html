@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>TREZOR Dev Kit</title>
+    <link rel="stylesheet" href="../css/base.css">
+  </head>
+  <body>
+    <header>
+      <h1>TREZOR Dev Kit</h1>
+    </header>
+    <section>
+      <h1>Introduction</h1>
+      <p>This hobbyist project documents a kit that developers can use to explore, develop, test, and debug the open source TREZOR hardware and software.</p>
+    </section>
+    <section>
+      <h1>Warning</h1>
+      <p>This kit does NOT produce a production version of the TREZOR cryptocurrency hardware wallet.</p>
+      <p>If you want an official TREZOR hardware wallet, see: <a href="https://shop.trezor.io/" target="_blank">https://shop.trezor.io/</a></p>
+      <p>
+        When contrasted to official production hardware, this kit lacks key security properties that make it less safe to use for non-development purposes.
+        For example, when used as documented here, this kit purposefully does not lock the flash memory that stores the bootloader code.
+        This is so that developers may repeatedly develop and test bootloader code changes.
+        Production hardware has these memory areas locked so that they can not be changed by an attacker.
+        There are other subtle differences as well, that may matter, depending on your usage and threat model.
+      </p>
+      <p>USE THIS KIT AT YOUR OWN RISK</p>
+    </section>
+    <section>
+      <h1>Hardware</h1>
+      <section>
+        <h1>TREZOR v1 Open Source Hardware Reference Documentation</h1>
+        <ul>
+          <li><a href="https://github.com/trezor/trezor-hw" target="_blank">https://github.com/trezor/trezor-hw</a></li>
+          <li><a href="https://raw.githubusercontent.com/trezor/trezor-hw/master/electronics/trezor.bom.txt" target="_blank">BOM</a></li>
+          <li><a href="https://raw.githubusercontent.com/trezor/trezor-hw/master/electronics/trezor_v1.1.sch.png" target="_blank">Schematic</a></li>
+        </ul>
+      </section>
+      <section>
+        <h1>About this Kit</h1>
+        <p>
+          One key difference between this kit and production hardware is the MCU (micro-controller) used.
+          Production hardware uses the STM32F205RET6 MCU and this kit uses the STM32F405RGT6 MCU.
+          The former is a Cortex-M3 and the latter is a Cortex-M4.
+          The Cortex-M4 architecture is a backwards compatible superset of Cortex-M3. The additional features, like hard float capability, do not matter for this project.
+          The STM32F405RGT6 has 1MB of flash memory (vs the 205's 512KB), a core clock frequency of 168MHz (vs the 205's 120MHz), and 192KB of SRAM (vs the 205's 128KB).
+          The STM32F405RGT6 is pin-to-pin compatible with the STM32F205RET6 and uses the same TRNG.
+        </p>
+        <p>The Waveshare Core405R dev board has an 8MHz high-speed external crystal (matching the reference hardware), a STM32F405RGT6 MCU, a USB connector, power circuitry, SWD debug interface, boot mode select switch, and all the pins that we need, broken out and available for use.</p>
+        <p>Lastly, the STM32F405RGT6 is used by the MicroPython pyboard v1.1 and is being used to develop the TREZOR v2.</p>
+      </section>
+      <section>
+        <h1>Kit Contents</h1>
+        <ul>
+          <li>1 x Waveshare Core405R Dev Board</li>
+          <li>1 x ST-LINK V2 STM32 USB Debug Adapter</li>
+          <li>1 x 7-pin SPI SSD1306 128x64 OLED Display Module</li>
+          <li>2 x 12mm x 12mm tactile momentary switches</li>
+          <li>1 x half-size solderless breadboard</li>
+          <li>1 x USB Cable Type A Plug/Male to Type Mini-B Plug/Male</li>
+          <li>Female to male jumper wires with 0.1" header contacts</li>
+          <li>Female to female jumper wires with 0.1" header contacts</li>
+          <li>22 AWG solid-core copper wire</li>
+        </ul>
+        <figure>
+          <img src="./images/kit.jpg" alt="The Kit">
+          <figcaption>Fig 1. - The Kit</figcaption>
+        </figure>
+      </section>
+      <section>
+        <h1>Setup</h1>
+        <section>
+          <h1>Wiring the Debug Adapter to the Dev Board</h1>
+          <p>
+            Pay attention to the pinout that is specified on the debug adapter.
+            Also, pay attention to the location of the notch on the header housing.
+            Note that the white rectangle printed next to pin 5 on the pinout specification in Figure 2 denotes the notch.
+          </p>
+          <p>Connect the Debug Adapter's SWDIO, SWCLK, and GND pins (any one of the ground pins is sufficient) to the corresponding pins on the Dev Board's SWD connector.</p>
+          <figure>
+            <img src="./images/debug-adapter.jpg" alt="The Debug Adapter with Pinout Silkscreen">
+            <figcaption>Fig 2. - The Debug Adapter with Pinout Silkscreen</figcaption>
+          </figure>
+          <figure>
+            <img src="./images/debug-adapter-connector.jpg" alt="The Debug Adapter Notch">
+            <figcaption>Fig 3. - The Debug Adapter Notch</figcaption>
+          </figure>
+          <figure>
+            <img src="./images/swd-connector.jpg" alt="The Dev Board SWD Connector">
+            <figcaption>Fig 4. - The Dev Board SWD Connector</figcaption>
+          </figure>
+          <figure>
+            <img src="./images/debug-adapter-wired-1.jpg" alt="The Debug Adapter Wired - Debug Adapter Side">
+            <figcaption>Fig 5. - The Debug Adapter Wired - Debug Adapter Side</figcaption>
+          </figure>
+          <figure>
+            <img src="./images/debug-adapter-wired-2.jpg" alt="The Debug Adapter Wired - Dev Board Side">
+            <figcaption>Fig 6. - The Debug Adapter Wired - Dev Board Side</figcaption>
+          </figure>
+          <figure>
+            <img src="./images/debug-adapter-wired-3.jpg" alt="The Debug Adapter Wired">
+            <figcaption>Fig 7. - The Debug Adapter Wired</figcaption>
+          </figure>
+        </section>
+        <section>
+          <h1>Setting Dev Board Jumpers and Switches</h1>
+          <p>Set the Dev Board jumpers and switches as shown in Figure 8.</p>
+          <figure>
+            <img src="./images/dev-board-jumpers-switches.jpg" alt="The Dev Board Jumper and Switch Configuration">
+            <figcaption>Fig 8. - The Dev Board Jumper and Switch Configuration</figcaption>
+          </figure>
+        </section>
+        <section>
+          <h1>Wiring the Dev Board to the Breadboard Display and Switches</h1>
+          <table>
+            <tr><th>Dev Board Pin</th><th>Breadboard Pin</th><th>Alternate Name</th><th>Comment</th></tr>
+            <tr><td>PC5</td><td>Button 2</td><td></td><td>Either button pin; connect GND to the other button pin</td></tr>
+            <tr><td>PA4</td><td>CS</td><td>Chip Select</td><td>Pin 7 on Pictured Display</td></tr>
+            <tr><td>PB0</td><td>DC</td><td>Data/Command</td><td>Pin 6 on Pictured Display</td></tr>
+            <tr><td>PB1</td><td>RES</td><td>Reset</td><td>Pin 5 on Pictured Display</td></tr>
+            <tr><td>PA7</td><td>SDA</td><td>MOSI</td><td>Pin 4 on Pictured Display</td></tr>
+            <tr><td>PA5</td><td>SCK</td><td>SCLK</td><td>Pin 3 on Pictured Display</td></tr>
+            <tr><td>3.3V</td><td>VDD</td><td>3V3</td><td>Pin 2 on Pictured Display</td></tr>
+            <tr><td>GND</td><td>GND</td><td>Ground</td><td>Pin 1 on Pictured Display</td></tr>
+            <tr><td>PC2</td><td>Button 1</td><td></td><td>Either button pin; connect GND to the other button pin</td></tr>
+          </table>
+          <figure>
+            <img src="./images/dev-board-wiring-1.jpg" alt="Dev Board Wiring">
+            <figcaption>Fig 9. - Dev Board Wiring</figcaption>
+          </figure>
+          <figure>
+            <img src="./images/dev-board-wiring-2.jpg" alt="Dev Board Wiring">
+            <figcaption>Fig 10. - Dev Board Wiring</figcaption>
+          </figure>
+          <figure>
+            <img src="./images/dev-board-wiring-3.jpg" alt="Dev Board Wiring">
+            <figcaption>Fig 11. - Dev Board Wiring</figcaption>
+          </figure>
+          <figure>
+            <img src="./images/dev-board-wiring-4.jpg" alt="Dev Board Wiring">
+            <figcaption>Fig 12. - Dev Board Wiring</figcaption>
+          </figure>
+          <figure>
+            <img src="./images/dev-board-wiring-5.jpg" alt="Dev Board Wiring">
+            <figcaption>Fig 13. - Dev Board Wiring</figcaption>
+          </figure>
+          <figure>
+            <img src="./images/dev-board-wiring-6.jpg" alt="Dev Board Wiring">
+            <figcaption>Fig 14. - Dev Board Wiring</figcaption>
+          </figure>
+        </section>
+      </section>
+    </section>
+    <section>
+      <h1>Software</h1>
+      <section>
+        <h1>TREZOR v1 Open Source Software Main Repository</h1>
+        <ul>
+          <li><a href="https://github.com/trezor/trezor-mcu" target="_blank">https://github.com/trezor/trezor-mcu</a></li>
+        </ul>
+      </section>
+      <section>
+        <h1>Setup</h1>
+        <p>This setup process comprises steps to install development and debugging tools on a temporary computer, as well as building and installing an initial version of the bootloader and firmware on the kit's MCU.</p>
+        <p>The following setup process was documented while running a Ubuntu GNOME 17.04 Live CD (Zesty Zapus) as user ubuntu-gnome.</p>
+        <p>This process has been documented in this video, if you'd like to follow along.</p>
+        <figure>
+          <video controls><source src="./videos/software-setup.webm" type="video/webm"></video>
+          <figcaption>Fig 15. - Software Setup Demonstration Video</figcaption>
+        </figure>
+        <ol>
+          <li>Connect to the Internet</li>
+          <li>Install required software packages<br>
+            <ul>
+              <li>sudo apt-get update</li>
+              <li>sudo apt-get -y install git</li>
+            </ul>
+          </li>
+          <li>Download tools<br>
+            <a href="https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads" target="_blank">GNU ARM Embedded Toolchain</a><br>
+            <a href="http://gnuarmeclipse.github.io/openocd/" target="_blank">OpenOCD</a> (see also <a href="http://openocd.org/doc-release/pdf/openocd.pdf" target="_blank">http://openocd.org/doc-release/pdf/openocd.pdf</a>)<br>
+            <ul>
+              <li>cd /tmp/</li>
+              <li>wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/6-2017q2/gcc-arm-none-eabi-6-2017-q2-update-linux.tar.bz2</li>
+              <li>wget https://github.com/gnu-mcu-eclipse/openocd/releases/download/gae-0.10.0-20170418/gnuarmeclipse-openocd-debian64-0.10.0-201704182147-dev.tgz</li>
+            </ul>
+          </li>
+          <li>Extract tools<br>
+            <ul>
+              <li>tar xjf gcc-arm-none-eabi-6-2017-q2-update-linux.tar.bz2</li>
+              <li>tar xzf gnuarmeclipse-openocd-debian64-0.10.0-201704182147-dev.tgz</li>
+            </ul>
+          </li>
+          <li>Add extracted tool binaries to PATH environment variable<br>
+            <ul>
+              <li>export PATH="/tmp/gcc-arm-none-eabi-6-2017-q2-update/bin:/tmp/gnuarmeclipse/openocd/0.10.0-201704182147-dev/bin:$PATH"</li>
+            </ul>
+          </li>
+          <li>Make the USB devices that we will be using available to non-root users<br>
+            <ul>
+              <li>/bin/echo -e '# debug adapter\nSUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3748", MODE:="0666"' > /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e '# dev board running trezor v1\nSUBSYSTEMS=="usb", ATTRS{idVendor}=="534c", ATTRS{idProduct}=="0001", MODE:="0666"' >> /tmp/99-dev-kit.rules</li>
+              <li>sudo cp /tmp/99-dev-kit.rules /etc/udev/rules.d/</li>
+            </ul>
+          </li>
+          <li>Download the TREZOR v1 bootloader and firmware source code<br>
+            <ul>
+              <li>git clone https://github.com/trezor/trezor-mcu.git</li>
+            </ul>
+          </li>
+          <li>Build the TREZOR v1 bootloader and package it with a stock 1.5.0 firmware<br>
+              Note: The "export MEMORY_PROTECT=0" is what controls the code that locks the bootloader's flash memory on your dev board.<br>
+            <ul>
+              <li>cd trezor-mcu/</li>
+              <li>git submodule update --init</li>
+              <li>CFLAGS='-std=c99' make -C vendor/libopencm3/</li>
+              <li>export OPTFLAGS=-Os</li>
+              <li>export MEMORY_PROTECT=0</li>
+              <li>make</li>
+              <li>make -C bootloader/</li>
+              <li>./bootloader/firmware_align.py bootloader/bootloader.bin</li>
+              <li>cp bootloader/bootloader.bin bootloader/combine/bl.bin</li>
+              <li>cd bootloader/combine/</li>
+              <li>wget -O fw.bin https://wallet.trezor.io/data/firmware/trezor-1.5.0.bin</li>
+              <li>./prepare.py</li>
+            </ul>
+          </li>
+          <li>Begin the process to put the combined bootloader and firmware code onto the dev board<br>
+              First, plug-in both the dev board and the debug adapter to your computer's USB ports.<br>
+            <ul>
+              <li>cd /tmp/gnuarmeclipse/openocd/0.10.0-201704182147-dev && ./bin/openocd -f ./scripts/interface/stlink-v2.cfg -f ./scripts/target/stm32f4x.cfg</li>
+              <li>In a second terminal, start gdb and connect it to the openocd that we started in the previous step with:<br>
+              /tmp/gcc-arm-none-eabi-6-2017-q2-update/bin/arm-none-eabi-gdb /tmp/trezor-mcu/bootloader/bootloader.elf -ex 'target remote localhost:3333'</li>
+              <li>Within gdb, pass the control and flash commands through to openocd:<br>
+              (gdb) monitor reset halt</li>
+              <li>(gdb) monitor flash write_image erase /tmp/trezor-mcu/bootloader/combine/combined.bin 0x08000000</li>
+              <li>At this point, the flash has been written. Now set some test breakpoints and simulate debugging some code.<br>
+              (gdb) monitor reset halt</li>
+              <li>(gdb) b main</li>
+              <li>(gdb) c</li>
+              <li>(gdb) b memory_protect</li>
+              <li>(gdb) c</li>
+              <li>(gdb) c</li>
+              <li>(gdb) Press Ctrl + C to interrupt software execution</li>
+              <li>(gdb) quit</li>
+              <li>Done flashing the software to the dev board. Unplug the debug adapter and dev board.</li>
+            </ul>
+          </li>
+          <li>Test the bootloader and firmware just loaded onto the dev board<br>
+              First, plug-in the dev board<br>
+            <ul>
+              <li>cd /tmp/</li>
+              <li>git clone https://github.com/trezor/python-trezor.git</li>
+              <li>sudo apt-get -y install python-pip python-dev cython libusb-1.0-0-dev libudev-dev</li>
+              <li>sudo pip install setuptools click trezor</li>
+              <li>./python-trezor/trezorctl wipe_device</li>
+              <li>./python-trezor/trezorctl load_device -m 'fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun agent'</li>
+              <li>./python-trezor/trezorctl get_address -c Bitcoin -n "Bitcoin/0'/0/0"</li>
+              <li>./python-trezor/trezorctl get_address -c Litecoin -n "Litecoin/0'/0/0"</li>
+              <li>./python-trezor/trezorctl get_address -c Namecoin -n "Namecoin/0'/0/0"</li>
+            </ul>
+          </li>
+          <li>Install eclipse so that we can debug in a graphical environment<br>
+            <ul>
+              <li>cd /tmp/</li>
+              <li>sudo apt-get -y install openjdk-8-jdk</li>
+              <li>wget http://mirror.math.princeton.edu/pub/eclipse//technology/epp/downloads/release/oxygen/R/eclipse-cpp-oxygen-R-linux-gtk-x86_64.tar.gz</li>
+              <li>tar xzf eclipse-cpp-oxygen-R-linux-gtk-x86_64.tar.gz</li>
+              <li>mkdir -p /tmp/eclipse-workspace</li>
+            </ul>
+          </li>
+          <li>Start OpenOCD and eclipse. Setup a debug configuration and debug graphically.<br>
+              The full process is shown in the video in Figure 16.
+            <figure>
+              <video controls><source src="./videos/eclipse-debug.webm" type="video/webm"></video>
+             <figcaption>Fig 16. - Eclipse Graphical Debugging Demonstration Video</figcaption>
+            </figure>
+          </li>
+        </ol>
+      </section>
+    </section>
+    <section>
+      <h1>More</h1>
+      <section>
+        <h1>Running Standalone</h1>
+        <p>The kit can also be run in a standalone configuration, without the debug adapter connected.</p>
+        <figure>
+          <img src="./images/kit-running-no-debug-adapter.jpg" alt="The Kit Running Standalone without Debug Adapter Connected">
+          <figcaption>Fig 17. - The Kit Running Standalone without Debug Adapter Connected</figcaption>
+        </figure>
+      </section>
+      <section>
+        <h1>Flashing in DFU mode with dfu-util</h1>
+        <p>
+          The preceding process to flash code into the MCU's flash memory was done in non-Device Firmware Upgrade (DFU) mode.
+          DFU mode can be used also. Doing so just requires using different tools, moving a switch, and unplugging and replugging the dev board a couple of times.
+          Using DFU mode is a little less convenient when compared to the flash process used above.
+        </p>
+        <p>
+          To use DFU mode<br>
+          <ul>
+            <li>Unplug the dev board and debug adapter if either is plugged into your computer's USB port(s)</li>
+            <li>Flip the Boot Config switch to System/DFU mode (Number 2 in Figure 8 above)</li>
+            <li>Plug the dev board into your computer's USB port</li>
+            <li>Verify with:<br>
+            lsusb | grep 'STMicroelectronics STM Device in DFU Mode'<br>
+            You'll see something like:<br>
+            0483:df11 STMicroelectronics STM Device in DFU Mode
+            </li>
+            <li>cd /tmp/</li>
+            <li>sudo apt-get -y install dfu-util</li>
+            <li>dfu-util -a 0 -s 0x8000000 -D /tmp/trezor-mcu/bootloader/combine/combined.bin</li>
+            <li>Wait until finished and then unplug the dev board</li>
+            <li>Flip the Boot Config switch back to Flash mode (Number 2 in Figure 8 above)</li>
+            <li>Plug the dev board into your computer's USB port. You're now running the code that you just stored into the MCU's flash memory.</li>
+          </ul>
+        </p>
+      </section>
+      <section>
+        <h1>Getting Info About and Erasing MCU Flash</h1>
+        <p>Here are some more gdb-to-openocd passthrough commands for working with the MCU flash memory.</p>
+        <ul>
+          <li>Retrieve info about current state of the flash memory sectors<br>
+          (gdb) monitor flash info 0
+          </li>
+          <li>Erase all flash memory sectors<br>
+          (gdb) monitor flash erase_sector 0 0 last
+          </li>
+        </ul>
+      </section>
+    </section>
+  </body>
+</html>
+
