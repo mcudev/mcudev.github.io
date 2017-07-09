@@ -166,24 +166,30 @@
       </section>
       <section>
         <h1>Setup</h1>
-        <p>This setup process comprises steps to install development and debugging tools on a temporary computer, and build and install a bootloader and firmware on the kit's MCU.</p>
-        <p>The following setup process was documented while running an Ubuntu GNOME 17.04 Live CD (Zesty Zapus) as user ubuntu-gnome.</p>
-        <p>This process was recorded and is documented in the video in Figure 15, if you'd like to follow along, or are unclear about any of the instructions.</p>
+        <p>
+          This setup process comprises steps to install development and debugging tools on a temporary computer, then build and install a bootloader and firmware on the kit's MCU.<br>
+          The following setup process was documented while running an Ubuntu GNOME 17.04 Live CD (Zesty Zapus) as user ubuntu-gnome.<br>
+          The video in Figure 15 is a demonstration of the process, if you'd like to follow along, or are unclear about any of the instructions.
+        </p>
         <figure>
           <video controls><source src="./videos/software-setup.webm" type="video/webm"></video>
           <figcaption>Fig 15. - Software Setup Demonstration Video</figcaption>
         </figure>
         <ol>
           <li>Connect to the Internet</li>
+          <li>cd /tmp/</li>
           <li>Install required software packages<br>
             <ul>
               <li>sudo apt-get update</li>
-              <li>sudo apt-get -y install git</li>
+              <li>sudo apt-get -y install git python-pip</li>
+              <li>sudo pip install ecdsa</li>
+              <li>sudo apt-get -y install python-dev cython libusb-1.0-0-dev libudev-dev (note: required for python-trezor testing)</li>
+              <li>sudo pip install setuptools click trezor (note: required for python-trezor testing)</li>
+              <li>sudo apt-get -y install openjdk-8-jdk (note: required for the eclipse GUI)</li>
             </ul>
           </li>
           <li>Download tools<br>
             <ul>
-              <li>cd /tmp/</li>
               <li><a href="https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads" target="_blank">GNU ARM Embedded Toolchain</a><br>
                 <ul>
                   <li>wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/6-2017q2/gcc-arm-none-eabi-6-2017-q2-update-linux.tar.bz2</li>
@@ -192,6 +198,11 @@
               <li><a href="http://gnuarmeclipse.github.io/openocd/" target="_blank">OpenOCD</a> (see also <a href="http://openocd.org/doc-release/pdf/openocd.pdf" target="_blank">http://openocd.org/doc-release/pdf/openocd.pdf</a>)<br>
                 <ul>
                   <li>wget https://github.com/gnu-mcu-eclipse/openocd/releases/download/gae-0.10.0-20170418/gnuarmeclipse-openocd-debian64-0.10.0-201704182147-dev.tgz</li>
+                </ul>
+              </li>
+              <li><a href="https://www.eclipse.org/downloads/eclipse-packages/" target="_blank">Eclipse IDE for C/C++ Developers</a> (get the latest 64-bit Linux version available; Oxygen or newer)<br>
+                <ul>
+                  <li>wget http://mirror.math.princeton.edu/pub/eclipse/technology/epp/downloads/release/oxygen/R/eclipse-cpp-oxygen-R-linux-gtk-x86_64.tar.gz</li>
                 </ul>
               </li>
             </ul>
@@ -214,14 +225,10 @@
               <li>sudo cp /tmp/99-dev-kit.rules /etc/udev/rules.d/</li>
             </ul>
           </li>
-          <li>Download the TREZOR v1 bootloader and firmware source code<br>
-            <ul>
-              <li>git clone https://github.com/trezor/trezor-mcu.git</li>
-            </ul>
-          </li>
-          <li>Build and package the TREZOR v1 bootloader and firmware<br>
+          <li>Download, build, and package the TREZOR v1 bootloader and firmware from source code<br>
               Note: The "export MEMORY_PROTECT=0" is what controls the code that locks the bootloader's flash memory on your dev board.<br>
             <ul>
+              <li>git clone https://github.com/trezor/trezor-mcu.git</li>
               <li>cd trezor-mcu/</li>
               <li>git submodule update --init</li>
               <li>CFLAGS='-std=c99' make -C vendor/libopencm3/</li>
@@ -244,7 +251,7 @@
           <li>Open a second terminal then connect gdb to the OpenOCD process that we started in the previous step:<br>
               /tmp/gcc-arm-none-eabi-6-2017-q2-update/bin/arm-none-eabi-gdb --nx -ex 'target remote localhost:3333' -ex 'monitor reset halt'
           </li>
-          <li>Within gdb, to write the combined bootloader and firmware binary to flash memory, pass the following control and flash command through to OpenOCD:<br>
+          <li>Within gdb, send OpenOCD the flash command to write the combined bootloader and firmware binary to MCU flash memory:<br>
             <ul>
               <li>(gdb) monitor flash write_image erase /tmp/trezor-mcu/bootloader/combine/combined.bin 0x08000000</li>
             </ul>
@@ -278,8 +285,6 @@
               <li>Plug-in the dev board and progress past the unofficial firmware warnings (if you are running the firmware that was compiled earlier and not an officially signed firmware).</li>
               <li>cd /tmp/</li>
               <li>git clone https://github.com/trezor/python-trezor.git</li>
-              <li>sudo apt-get -y install python-pip python-dev cython libusb-1.0-0-dev libudev-dev</li>
-              <li>sudo pip install setuptools click trezor</li>
               <li>./python-trezor/trezorctl wipe_device</li>
               <li>./python-trezor/trezorctl load_device -m 'fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun agent'</li>
               <li>./python-trezor/trezorctl get_address -c Bitcoin -n "Bitcoin/0'/0/0"</li>
@@ -290,8 +295,6 @@
           <li>Install eclipse so that a graphical environment can be used for debugging:<br>
             <ul>
               <li>cd /tmp/</li>
-              <li>sudo apt-get -y install openjdk-8-jdk</li>
-              <li>wget http://mirror.math.princeton.edu/pub/eclipse//technology/epp/downloads/release/oxygen/R/eclipse-cpp-oxygen-R-linux-gtk-x86_64.tar.gz</li>
               <li>tar xzf eclipse-cpp-oxygen-R-linux-gtk-x86_64.tar.gz</li>
               <li>mkdir -p /tmp/eclipse-workspace</li>
             </ul>
