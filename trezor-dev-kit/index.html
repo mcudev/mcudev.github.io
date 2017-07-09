@@ -17,12 +17,15 @@
       <h1>Warning</h1>
       <p>This kit does NOT produce a production version of the TREZOR cryptocurrency hardware wallet.</p>
       <p>If you want an official TREZOR hardware wallet, see: <a href="https://shop.trezor.io/" target="_blank">https://shop.trezor.io/</a></p>
+      <p>When contrasted to official production hardware, this kit is less safe to use for non-development purposes.</p>
       <p>
-        When contrasted to official production hardware, this kit lacks key security properties that make it less safe to use for non-development purposes.
-        For example, when used as documented here, this kit purposefully does not lock the flash memory that stores the bootloader code.
-        This is so that developers may repeatedly develop and test bootloader code changes.
-        Production hardware has these memory areas locked so that they can not be changed by an attacker.
-        There are other subtle differences as well, that may matter, depending on your usage and threat model.
+        Necessarily, different selections were made for this developer kit's key security properties vs. production hardware.
+        For example, when used as documented here, this kit purposefully leaves debug capabilities enabled and does not apply write protections to bootloader flash memory.
+        This is so that developers may repeatedly develop, test, and debug changes.
+      </p>
+      <p>
+        Production hardware irreversibly disables debug capabilities and Device Firmware Upgrade (DFU) mode, and protects key memory areas as part of reducing attack surface and increasing depth of defenses.
+        There may be other subtle, yet meaningful, weaknesses as well, depending on your usage and threat model.
       </p>
       <p>USE THIS KIT AT YOUR OWN RISK</p>
     </section>
@@ -37,22 +40,9 @@
         </ul>
       </section>
       <section>
-        <h1>About this Kit</h1>
-        <p>
-          One key difference between this kit and production hardware is the MCU (micro-controller) used.
-          Production hardware uses the STM32F205RET6 MCU and this kit uses the STM32F405RGT6 MCU.
-          The former is a Cortex-M3 and the latter is a Cortex-M4.
-          The Cortex-M4 architecture is a backwards compatible superset of Cortex-M3. The additional features, like hard float capability, do not matter for this project.
-          The STM32F405RGT6 has 1MB of flash memory (vs the 205's 512KB), a core clock frequency of 168MHz (vs the 205's 120MHz), and 192KB of SRAM (vs the 205's 128KB).
-          The STM32F405RGT6 is pin-to-pin compatible with the STM32F205RET6 and uses the same TRNG.
-        </p>
-        <p>The Waveshare Core405R dev board has an 8MHz high-speed external crystal (matching the reference hardware), a STM32F405RGT6 MCU, a USB connector, power circuitry, SWD debug interface, boot mode select switch, and all the pins that we need, broken out and available for use.</p>
-        <p>Lastly, the STM32F405RGT6 is used by the MicroPython pyboard v1.1 and is being used to develop the TREZOR v2.</p>
-      </section>
-      <section>
         <h1>Kit Contents</h1>
         <ul>
-          <li>1 x Waveshare Core405R Dev Board</li>
+          <li>1 x <a href="http://www.waveshare.com/core405r.htm" target="_blank">Waveshare Core405R Dev Board</a></li>
           <li>1 x ST-LINK V2 STM32 USB Debug Adapter</li>
           <li>1 x 7-pin SPI SSD1306 128x64 OLED Display Module</li>
           <li>2 x 12mm x 12mm tactile momentary switches</li>
@@ -66,6 +56,19 @@
           <img src="./images/kit.jpg" alt="The Kit">
           <figcaption>Fig 1. - The Kit</figcaption>
         </figure>
+      </section>
+      <section>
+        <h1>About the Kit</h1>
+        <p>
+          One key difference between this kit and production hardware is the microcontroller (MCU) used.
+          Production hardware uses the STM32F205RET6 MCU and this kit uses the STM32F405RGT6 MCU.
+          The former is an ARM&reg; Cortex&reg;-M3 and the latter is an ARM&reg; Cortex&reg;-M4.
+          The Cortex-M4 architecture is a backwards compatible superset of Cortex-M3. The additional features, like hard float capability, do not matter for this project.
+          The STM32F405RGT6 has 1MB of flash memory (vs the 205's 512KB), a core clock frequency of 168MHz (vs the 205's 120MHz), and 192KB of SRAM (vs the 205's 128KB).
+          The STM32F405RGT6 is pin-to-pin compatible with the STM32F205RET6 and uses the same TRNG.
+        </p>
+        <p>The Waveshare Core405R dev board has an 8MHz high-speed external crystal (matching the reference hardware), a STM32F405RGT6 MCU, a USB connector, power circuitry, SWD debug interface, boot mode select switch, and all the pins needed, broken out and available for use.</p>
+        <p>Lastly, the STM32F405RGT6 is used by the MicroPython pyboard v1.1 and is being used to develop the TREZOR v2.</p>
       </section>
       <section>
         <h1>Setup</h1>
@@ -112,9 +115,11 @@
         </section>
         <section>
           <h1>Wiring the Dev Board to the Breadboard Display and Switches</h1>
+          <p>Use the following table to wire between the dev board and appropriate tie points on your breadboard. The following pictures are also helpful if you don't quite understand.</p>
+          <p>Pins on the dev board are documented by the silkscreen on the other side of the board. Pins on the display module are also documented by silkscreen.</p>
           <table>
             <tr><th>Dev Board Pin</th><th>Breadboard Pin</th><th>Alternate Name</th><th>Comment</th></tr>
-            <tr><td>PC5</td><td>Button 2</td><td></td><td>Either button pin; connect GND to the other button pin</td></tr>
+            <tr><td>PC5</td><td>Button 2</td><td></td><td>Either button pin; connect GND to the other button pin; button is Active-Low</td></tr>
             <tr><td>PA4</td><td>CS</td><td>Chip Select</td><td>Pin 7 on Pictured Display</td></tr>
             <tr><td>PB0</td><td>DC</td><td>Data/Command</td><td>Pin 6 on Pictured Display</td></tr>
             <tr><td>PB1</td><td>RES</td><td>Reset</td><td>Pin 5 on Pictured Display</td></tr>
@@ -122,7 +127,7 @@
             <tr><td>PA5</td><td>SCK</td><td>SCLK</td><td>Pin 3 on Pictured Display</td></tr>
             <tr><td>3.3V</td><td>VDD</td><td>3V3</td><td>Pin 2 on Pictured Display</td></tr>
             <tr><td>GND</td><td>GND</td><td>Ground</td><td>Pin 1 on Pictured Display</td></tr>
-            <tr><td>PC2</td><td>Button 1</td><td></td><td>Either button pin; connect GND to the other button pin</td></tr>
+            <tr><td>PC2</td><td>Button 1</td><td></td><td>Either button pin; connect GND to the other button pin; button is Active-Low</td></tr>
           </table>
           <figure>
             <img src="./images/dev-board-wiring-1.jpg" alt="Dev Board Wiring">
@@ -161,9 +166,9 @@
       </section>
       <section>
         <h1>Setup</h1>
-        <p>This setup process comprises steps to install development and debugging tools on a temporary computer, as well as building and installing an initial version of the bootloader and firmware on the kit's MCU.</p>
-        <p>The following setup process was documented while running a Ubuntu GNOME 17.04 Live CD (Zesty Zapus) as user ubuntu-gnome.</p>
-        <p>This process has been documented in this video, if you'd like to follow along.</p>
+        <p>This setup process comprises steps to install development and debugging tools on a temporary computer, and build and install a bootloader and firmware on the kit's MCU.</p>
+        <p>The following setup process was documented while running an Ubuntu GNOME 17.04 Live CD (Zesty Zapus) as user ubuntu-gnome.</p>
+        <p>This process was recorded and is documented in the video in Figure 15, if you'd like to follow along, or are unclear about any of the instructions.</p>
         <figure>
           <video controls><source src="./videos/software-setup.webm" type="video/webm"></video>
           <figcaption>Fig 15. - Software Setup Demonstration Video</figcaption>
@@ -177,12 +182,18 @@
             </ul>
           </li>
           <li>Download tools<br>
-            <a href="https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads" target="_blank">GNU ARM Embedded Toolchain</a><br>
-            <a href="http://gnuarmeclipse.github.io/openocd/" target="_blank">OpenOCD</a> (see also <a href="http://openocd.org/doc-release/pdf/openocd.pdf" target="_blank">http://openocd.org/doc-release/pdf/openocd.pdf</a>)<br>
             <ul>
               <li>cd /tmp/</li>
-              <li>wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/6-2017q2/gcc-arm-none-eabi-6-2017-q2-update-linux.tar.bz2</li>
-              <li>wget https://github.com/gnu-mcu-eclipse/openocd/releases/download/gae-0.10.0-20170418/gnuarmeclipse-openocd-debian64-0.10.0-201704182147-dev.tgz</li>
+              <li><a href="https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads" target="_blank">GNU ARM Embedded Toolchain</a><br>
+                <ul>
+                  <li>wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/6-2017q2/gcc-arm-none-eabi-6-2017-q2-update-linux.tar.bz2</li>
+                </ul>
+              </li>
+              <li><a href="http://gnuarmeclipse.github.io/openocd/" target="_blank">OpenOCD</a> (see also <a href="http://openocd.org/doc-release/pdf/openocd.pdf" target="_blank">http://openocd.org/doc-release/pdf/openocd.pdf</a>)<br>
+                <ul>
+                  <li>wget https://github.com/gnu-mcu-eclipse/openocd/releases/download/gae-0.10.0-20170418/gnuarmeclipse-openocd-debian64-0.10.0-201704182147-dev.tgz</li>
+                </ul>
+              </li>
             </ul>
           </li>
           <li>Extract tools<br>
@@ -208,47 +219,63 @@
               <li>git clone https://github.com/trezor/trezor-mcu.git</li>
             </ul>
           </li>
-          <li>Build the TREZOR v1 bootloader and package it with a stock 1.5.0 firmware<br>
+          <li>Build and package the TREZOR v1 bootloader and firmware<br>
               Note: The "export MEMORY_PROTECT=0" is what controls the code that locks the bootloader's flash memory on your dev board.<br>
             <ul>
               <li>cd trezor-mcu/</li>
               <li>git submodule update --init</li>
               <li>CFLAGS='-std=c99' make -C vendor/libopencm3/</li>
-              <li>export OPTFLAGS=-Os</li>
               <li>export MEMORY_PROTECT=0</li>
               <li>make</li>
               <li>make -C bootloader/</li>
               <li>./bootloader/firmware_align.py bootloader/bootloader.bin</li>
               <li>cp bootloader/bootloader.bin bootloader/combine/bl.bin</li>
+              <li>make -C firmware/</li>
+              <li>make -C firmware/ sign</li>
+              <li>cp firmware/trezor.bin bootloader/combine/fw.bin</li>
               <li>cd bootloader/combine/</li>
-              <li>wget -O fw.bin https://wallet.trezor.io/data/firmware/trezor-1.5.0.bin</li>
               <li>./prepare.py</li>
             </ul>
           </li>
-          <li>Begin the process to put the combined bootloader and firmware code onto the dev board<br>
-              First, plug-in both the dev board and the debug adapter to your computer's USB ports.<br>
+          <li>Plug-in both the dev board and the debug adapter to your computer's USB ports.</li>
+          <li>Start OpenOCD<br>
+              cd /tmp/gnuarmeclipse/openocd/0.10.0-201704182147-dev && ./bin/openocd -f ./scripts/interface/stlink-v2.cfg -f ./scripts/target/stm32f4x.cfg
+          </li>
+          <li>Open a second terminal then connect gdb to the OpenOCD process that we started in the previous step:<br>
+              /tmp/gcc-arm-none-eabi-6-2017-q2-update/bin/arm-none-eabi-gdb --nx -ex 'target remote localhost:3333' -ex 'monitor reset halt'
+          </li>
+          <li>Within gdb, to write the combined bootloader and firmware binary to flash memory, pass the following control and flash command through to OpenOCD:<br>
             <ul>
-              <li>cd /tmp/gnuarmeclipse/openocd/0.10.0-201704182147-dev && ./bin/openocd -f ./scripts/interface/stlink-v2.cfg -f ./scripts/target/stm32f4x.cfg</li>
-              <li>In a second terminal, start gdb and connect it to the openocd that we started in the previous step with:<br>
-              /tmp/gcc-arm-none-eabi-6-2017-q2-update/bin/arm-none-eabi-gdb /tmp/trezor-mcu/bootloader/bootloader.elf -ex 'target remote localhost:3333'</li>
-              <li>Within gdb, pass the control and flash commands through to openocd:<br>
-              (gdb) monitor reset halt</li>
               <li>(gdb) monitor flash write_image erase /tmp/trezor-mcu/bootloader/combine/combined.bin 0x08000000</li>
-              <li>At this point, the flash has been written. Now set some test breakpoints and simulate debugging some code.<br>
-              (gdb) monitor reset halt</li>
-              <li>(gdb) b main</li>
-              <li>(gdb) c</li>
-              <li>(gdb) b memory_protect</li>
-              <li>(gdb) c</li>
-              <li>(gdb) c</li>
-              <li>(gdb) Press Ctrl + C to interrupt software execution</li>
-              <li>(gdb) quit</li>
-              <li>Done flashing the software to the dev board. Unplug the debug adapter and dev board.</li>
             </ul>
           </li>
-          <li>Test the bootloader and firmware just loaded onto the dev board<br>
-              First, plug-in the dev board<br>
+          <li>At this point, the flash has been written. Now, set some test breakpoints and simulate debugging code:<br>
             <ul>
+              <li>(gdb) monitor reset halt</li>
+              <li>(gdb) add-symbol-file /tmp/trezor-mcu/bootloader/bootloader.elf 0x08000000</li>
+              <li>(gdb) break main</li>
+              <li>(gdb) break memory_protect</li>
+              <li>(gdb) break load_app</li>
+              <li>(gdb) continue</li>
+              <li>(gdb) layout asm</li>
+              <li>(gdb) continue</li>
+              <li>(gdb) continue</li>
+              <li>(gdb) delete</li>
+              <li>(gdb) remove-symbol-file /tmp/trezor-mcu/bootloader/bootloader.elf</li>
+              <li>(gdb) add-symbol-file /tmp/trezor-mcu/firmware/trezor.elf 0x08010000</li>
+              <li>(gdb) break main</li>
+              <li>(gdb) continue</li>
+              <li>(gdb) continue</li>
+              <li>(gdb) Press Ctrl + C to interrupt software execution</li>
+              <li>(gdb) quit</li>
+            </ul>
+            <p>Note that the symbol files were added and removed above at points in the debugging process near bootloader-entry and bootloader-exit/firmware-entry. It was done this way to add breakpoints based on symbols relevant to the code being executed.</p>
+            <p>Also, be sure to check the display module and progress past the unofficial firmware warning message by pressing the appropriate buttons. Otherwise, it will seem as though your debugging session has simply stopped working. In fact, the code is just waiting for your user input.</p>
+          </li>
+          <li>Done flashing the software to the dev board and debugging. Kill the OpenOCD process and unplug the debug adapter and dev board.</li>
+          <li>Test the bootloader and firmware just loaded onto the dev board:<br>
+            <ul>
+              <li>Plug-in the dev board and progress past the unofficial firmware warnings (if you are running the firmware that was compiled earlier and not an officially signed firmware).</li>
               <li>cd /tmp/</li>
               <li>git clone https://github.com/trezor/python-trezor.git</li>
               <li>sudo apt-get -y install python-pip python-dev cython libusb-1.0-0-dev libudev-dev</li>
@@ -260,7 +287,7 @@
               <li>./python-trezor/trezorctl get_address -c Namecoin -n "Namecoin/0'/0/0"</li>
             </ul>
           </li>
-          <li>Install eclipse so that we can debug in a graphical environment<br>
+          <li>Install eclipse so that a graphical environment can be used for debugging:<br>
             <ul>
               <li>cd /tmp/</li>
               <li>sudo apt-get -y install openjdk-8-jdk</li>
@@ -270,7 +297,7 @@
             </ul>
           </li>
           <li>Start OpenOCD and eclipse. Setup a debug configuration and debug graphically.<br>
-              The full process is shown in the video in Figure 16.
+              The full process to setup graphical debugging is shown in the video in Figure 16.
             <figure>
               <video controls><source src="./videos/eclipse-debug.webm" type="video/webm"></video>
              <figcaption>Fig 16. - Eclipse Graphical Debugging Demonstration Video</figcaption>
@@ -280,20 +307,28 @@
       </section>
     </section>
     <section>
-      <h1>More</h1>
+      <h1>Going Further</h1>
+      <section>
+        <h1>Loading and Running an Officially Signed Firmware</h1>
+        <p>In the setup process, a self-built bootloader and firmware was compiled, combined, and then loaded onto the MCU flash. To use an officially signed firmware, simply replace fw.bin in the setup process above before running prepare.py. Then run the prepare.py and load the newly created combined.bin onto the MCU.</p>
+        <p>
+          An officially signed firmware can be downloaded with:<br>
+          wget -O fw.bin https://wallet.trezor.io/data/firmware/trezor-1.5.0.bin
+        </p>
+      </section>
       <section>
         <h1>Running Standalone</h1>
-        <p>The kit can also be run in a standalone configuration, without the debug adapter connected.</p>
+        <p>The kit can be used in a standalone configuration, without the debug adapter connected. Simply unplug and/or detach the debug adapter from the dev board and plug the dev board into your computer's USB port.</p>
         <figure>
           <img src="./images/kit-running-no-debug-adapter.jpg" alt="The Kit Running Standalone without Debug Adapter Connected">
           <figcaption>Fig 17. - The Kit Running Standalone without Debug Adapter Connected</figcaption>
         </figure>
       </section>
       <section>
-        <h1>Flashing in DFU mode with dfu-util</h1>
+        <h1>Flashing in DFU mode with dfu-util instead of flashing with OpenOCD</h1>
         <p>
-          The preceding process to flash code into the MCU's flash memory was done in non-Device Firmware Upgrade (DFU) mode.
-          DFU mode can be used also. Doing so just requires using different tools, moving a switch, and unplugging and replugging the dev board a couple of times.
+          The setup process used OpenOCD to flash code into the MCU's flash memory and was done in non-Device Firmware Upgrade (DFU) mode.
+          DFU mode can be used instead. Doing so just requires using different tools, moving a switch, and unplugging and replugging the dev board a couple of times.
           Using DFU mode is a little less convenient when compared to the flash process used above.
         </p>
         <p>
@@ -325,6 +360,30 @@
           </li>
           <li>Erase all flash memory sectors<br>
           (gdb) monitor flash erase_sector 0 0 last
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h1>Compiling the latest version of OpenOCD</h1>
+        First, see: https://sourceforge.net/p/openocd/code/ci/master/tree/README<br>
+        <ul>
+          <li>git clone git://git.code.sf.net/p/openocd/code.git openocd</li>
+          <li>sudo apt-get -y install libtool autoconf automake texinfo libusb-0.1-4 libusb-1.0-0</li>
+          <li>cd openocd/</li>
+          <li>./bootstrap</li>
+          <li>./configure</li>
+          <li>make</li>
+          <li>sudo make install</li>
+        </ul>
+        Then you can run with:<br>
+        openocd -f /usr/local/share/openocd/scripts/interface/stlink-v2.cfg -f /usr/local/share/openocd/scripts/target/stm32f4x.cfg
+      </section>
+      <section>
+        <h1>Questions</h1>
+        <ul>
+          <li>Q: How can I verify that the code I built will not lock the bootloader flash memory sectors?<br>
+              A: Before flashing the code, you can check with: arm-none-eabi-objdump -d /tmp/trezor-mcu/bootloader/bootloader.elf | less<br>
+                 You can use that to search for the memory_protect function to make sure that the generated code does not perform the steps to enable memory protection.
           </li>
         </ul>
       </section>
