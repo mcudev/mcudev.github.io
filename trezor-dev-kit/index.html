@@ -235,13 +235,12 @@
               <li>export MEMORY_PROTECT=0</li>
               <li>make</li>
               <li>make -C bootloader/</li>
-              <li>./bootloader/firmware_align.py bootloader/bootloader.bin</li>
+              <li>make -C bootloader/ align</li>
               <li>cp bootloader/bootloader.bin bootloader/combine/bl.bin</li>
               <li>make -C firmware/</li>
               <li>make -C firmware/ sign</li>
               <li>cp firmware/trezor.bin bootloader/combine/fw.bin</li>
-              <li>cd bootloader/combine/</li>
-              <li>./prepare.py</li>
+              <li>cd bootloader/combine/ && ./prepare.py</li>
             </ul>
           </li>
           <li>Plug-in both the dev board and the debug adapter to your computer's USB ports.</li>
