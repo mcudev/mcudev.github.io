@@ -64,10 +64,10 @@
           Production hardware uses the STM32F205RET6 MCU and this kit uses the STM32F405RGT6 MCU.
           The former is an ARM&reg; Cortex&reg;-M3 and the latter is an ARM&reg; Cortex&reg;-M4.
           The Cortex-M4 architecture is a backwards compatible superset of Cortex-M3. The additional features, like hard float capability, do not matter for this project.
-          The STM32F405RGT6 has 1MB of flash memory (vs the 205's 512KB), a core clock frequency of 168MHz (vs the 205's 120MHz), and 192KB of SRAM (vs the 205's 128KB).
+          The STM32F405RGT6 has 1MB of flash memory (vs the 205's 512KB), a core clock frequency adjustable up to 168MHz (including the 205's 120MHz; with matching clock tree), and 128KB of SRAM (same as the 205; the 405 has an additional 64KB of CCMRAM, giving it 192KB of usable RAM).
           The STM32F405RGT6 is pin-to-pin compatible with the STM32F205RET6 and uses the same TRNG.
         </p>
-        <p>The Waveshare Core405R dev board has an 8MHz high-speed external crystal (matching the reference hardware), a STM32F405RGT6 MCU, a USB connector, power circuitry, SWD debug interface, boot mode select switch, and all the pins needed, broken out and available for use.</p>
+        <p>The Waveshare Core405R dev board has an 8MHz high-speed external (HSE) crystal (matching the reference hardware), a STM32F405RGT6 MCU, a USB connector, power circuitry, SWD debug interface, boot mode select switch, and all the pins needed, broken out and available for use.</p>
         <p>Lastly, the STM32F405RGT6 is used by the MicroPython pyboard v1.1 and is being used to develop the TREZOR v2.</p>
       </section>
       <section>
