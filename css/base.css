@@ -25,7 +25,12 @@ td, th {
   border-left: 1px solid #000000;
 }
 
+figure {
+  display: inline-block;
+  width: 400px;
+}
+
 img, video {
-  max-width: 1000px;
+  width: 100%;
 }
 
