@@ -27,7 +27,7 @@
         Production hardware irreversibly disables debug capabilities and Device Firmware Upgrade (DFU) mode, and protects key memory areas as part of reducing attack surface and increasing depth of defenses.
         There may be other subtle, yet meaningful, weaknesses as well, depending on your usage and threat model.
       </p>
-      <p>USE THIS KIT AT YOUR OWN RISK</p>
+      <p>USE THESE KITS AT YOUR OWN RISK</p>
     </section>
     <section>
       <h1>Hardware</h1>
@@ -112,10 +112,56 @@
         </figure>
       </section>
       <section>
+        <h1>Kit Contents: v2 (the second printed wiring board [PWB] version)</h1>
+        <ul>
+          <li>1 x <a href="http://www.waveshare.com/core405r.htm" target="_blank">Waveshare Core405R Dev Board</a></li>
+          <li>1 x ST-LINK V2 STM32 USB Debug Adapter</li>
+          <li>1 x 7-pin SPI 128x64 1.54 inch SSD1309 driven OLED Display Module (Note: The SSD1309 is compatible with the SSD1306. The v0 kit display is interchangeable with this display.)</li>
+          <li>1 x PWB (schematic and board files available <a href="https://github.com/mcudev/mcudev.github.io/tree/master/trezor-dev-kit/v2" target="_blank">here</a>)</li>
+          <li>2 x 12mm x 12mm x 5mm tactile momentary switches</li>
+          <li>1 x USB Cable Type A Plug/Male to Type Mini-B Plug/Male</li>
+          <li>1 x 2.54mm Pitch, Single Row, 7 Position, Female/Socket Header (preci-dip 801-87-007-10-001101 works well)</li>
+          <li>4 x 2.54mm Pitch, Double Row, 16 Position, Female/Socket Header (preci-dip 803-87-016-10-001101 works well)</li>
+          <li>Solder and Soldering Tools</li>
+        </ul>
+        <figure>
+          <a href="./images/v2-1.jpg" target="_blank"><img src="./images/v2-1.jpg" alt="Bare PWB (top)"></a>
+          <figcaption>Fig H12. - Bare PWB (top)</figcaption>
+        </figure>
+        <figure>
+          <a href="./images/v2-2.jpg" target="_blank"><img src="./images/v2-2.jpg" alt="Bare PWB (bottom)"></a>
+          <figcaption>Fig H13. - Bare PWB (bottom)</figcaption>
+        </figure>
+        <figure>
+          <a href="./images/v2-3.jpg" target="_blank"><img src="./images/v2-3.jpg" alt="Assembled PWB (top)"></a>
+          <figcaption>Fig H14. - Assembled PWB (top)</figcaption>
+        </figure>
+        <figure>
+          <a href="./images/v2-4.jpg" target="_blank"><img src="./images/v2-4.jpg" alt="Assembled PWB (bottom)"></a>
+          <figcaption>Fig H15. - Assembled PWB (bottom)</figcaption>
+        </figure>
+        <figure>
+          <a href="./images/v2-5.jpg" target="_blank"><img src="./images/v2-5.jpg" alt="Front angle view (with large 1.54 inch display)"></a>
+          <figcaption>Fig H16. - Front angle view (with large 1.54 inch display)</figcaption>
+        </figure>
+        <figure>
+          <a href="./images/v2-6.jpg" target="_blank"><img src="./images/v2-6.jpg" alt="Side view, PWB and display module stacked on the dev board"></a>
+          <figcaption>Fig H17. - Side view, PWB and display module stacked on the dev board</figcaption>
+        </figure>
+        <figure>
+          <a href="./images/v2-7.jpg" target="_blank"><img src="./images/v2-7.jpg" alt="Installed and running (large 1.54 inch display)"></a>
+          <figcaption>Fig H18. - Installed and running (large 1.54 inch display)</figcaption>
+        </figure>
+        <figure>
+          <a href="./images/v2-8.jpg" target="_blank"><img src="./images/v2-8.jpg" alt="Installed and running (regular 0.96 inch display)"></a>
+          <figcaption>Fig H19. - Installed and running (regular 0.96 inch display)</figcaption>
+        </figure>
+      </section>
+      <section>
         <h1>About the Kits</h1>
         <p>
           One key difference between these kits and production hardware is the microcontroller (MCU) used.
-          Production hardware uses the STM32F205RET6 MCU and this kit uses the STM32F405RGT6 MCU.
+          Production hardware uses the STM32F205RET6 MCU and these kits use the STM32F405RGT6 MCU.
           The former is an ARM&reg; Cortex&reg;-M3 and the latter is an ARM&reg; Cortex&reg;-M4.
           The Cortex-M4 architecture is a backwards compatible superset of Cortex-M3. The additional features, like hard float capability, do not matter for this project.
           The STM32F405RGT6 has 1MB of flash memory (vs the 205's 512KB), a core clock frequency adjustable up to 168MHz (including the 205's 120MHz; with matching clock tree), and 128KB of SRAM (same as the 205; the 405 has an additional 64KB of CCMRAM, giving it 192KB of usable RAM).
@@ -131,40 +177,40 @@
           <p>
             Pay attention to the pinout that is specified on the debug adapter.
             Also, pay attention to the location of the notch on the header housing.
-            Note that the white rectangle printed next to pin 5 on the pinout specification in Figure H12 denotes the notch.
+            Note that the white rectangle printed next to pin 5 on the pinout specification in Figure H20 denotes the notch.
           </p>
           <p>Connect the Debug Adapter's SWDIO, SWCLK, and GND pins (any one of the ground pins is sufficient) to the corresponding pins on the Dev Board's SWD connector.</p>
           <figure>
             <a href="./images/debug-adapter.jpg" target="_blank"><img src="./images/debug-adapter.jpg" alt="The Debug Adapter with Pinout Silkscreen"></a>
-            <figcaption>Fig H12. - The Debug Adapter with Pinout Silkscreen</figcaption>
+            <figcaption>Fig H20. - The Debug Adapter with Pinout Silkscreen</figcaption>
           </figure>
           <figure>
             <a href="./images/debug-adapter-connector.jpg" target="_blank"><img src="./images/debug-adapter-connector.jpg" alt="The Debug Adapter Notch"></a>
-            <figcaption>Fig H13. - The Debug Adapter Notch</figcaption>
+            <figcaption>Fig H21. - The Debug Adapter Notch</figcaption>
           </figure>
           <figure>
             <a href="./images/swd-connector.jpg" target="_blank"><img src="./images/swd-connector.jpg" alt="The Dev Board SWD Connector"></a>
-            <figcaption>Fig H14. - The Dev Board SWD Connector</figcaption>
+            <figcaption>Fig H22. - The Dev Board SWD Connector</figcaption>
           </figure>
           <figure>
             <a href="./images/debug-adapter-wired-1.jpg" target="_blank"><img src="./images/debug-adapter-wired-1.jpg" alt="The Debug Adapter Wired - Debug Adapter Side"></a>
-            <figcaption>Fig H15. - The Debug Adapter Wired - Debug Adapter Side</figcaption>
+            <figcaption>Fig H23. - The Debug Adapter Wired - Debug Adapter Side</figcaption>
           </figure>
           <figure>
             <a href="./images/debug-adapter-wired-2.jpg" target="_blank"><img src="./images/debug-adapter-wired-2.jpg" alt="The Debug Adapter Wired - Dev Board Side"></a>
-            <figcaption>Fig H16. - The Debug Adapter Wired - Dev Board Side</figcaption>
+            <figcaption>Fig H24. - The Debug Adapter Wired - Dev Board Side</figcaption>
           </figure>
           <figure>
             <a href="./images/debug-adapter-wired-3.jpg" target="_blank"><img src="./images/debug-adapter-wired-3.jpg" alt="The Debug Adapter Wired"></a>
-            <figcaption>Fig H17. - The Debug Adapter Wired</figcaption>
+            <figcaption>Fig H25. - The Debug Adapter Wired</figcaption>
           </figure>
         </section>
         <section>
           <h1>Setting Dev Board Jumpers and Switches</h1>
-          <p>Set the Dev Board jumpers and switches as shown in Figure H18.</p>
+          <p>Set the Dev Board jumpers and switches as shown in Figure H26.</p>
           <figure>
             <a href="./images/dev-board-jumpers-switches.jpg" target="_blank"><img src="./images/dev-board-jumpers-switches.jpg" alt="The Dev Board Jumper and Switch Configuration"></a>
-            <figcaption>Fig H18. - The Dev Board Jumper and Switch Configuration</figcaption>
+            <figcaption>Fig H26. - The Dev Board Jumper and Switch Configuration</figcaption>
           </figure>
         </section>
         <section>
@@ -185,27 +231,27 @@
           </table>
           <figure>
             <a href="./images/dev-board-wiring-1.jpg" target="_blank"><img src="./images/dev-board-wiring-1.jpg" alt="Dev Board Wiring"></a>
-            <figcaption>Fig H19. - Dev Board Wiring</figcaption>
+            <figcaption>Fig H27. - Dev Board Wiring</figcaption>
           </figure>
           <figure>
             <a href="./images/dev-board-wiring-2.jpg" target="_blank"><img src="./images/dev-board-wiring-2.jpg" alt="Dev Board Wiring"></a>
-            <figcaption>Fig H20. - Dev Board Wiring</figcaption>
+            <figcaption>Fig H28. - Dev Board Wiring</figcaption>
           </figure>
           <figure>
             <a href="./images/dev-board-wiring-3.jpg" target="_blank"><img src="./images/dev-board-wiring-3.jpg" alt="Dev Board Wiring"></a>
-            <figcaption>Fig H21. - Dev Board Wiring</figcaption>
+            <figcaption>Fig H29. - Dev Board Wiring</figcaption>
           </figure>
           <figure>
             <a href="./images/dev-board-wiring-4.jpg" target="_blank"><img src="./images/dev-board-wiring-4.jpg" alt="Dev Board Wiring"></a>
-            <figcaption>Fig H22. - Dev Board Wiring</figcaption>
+            <figcaption>Fig H30. - Dev Board Wiring</figcaption>
           </figure>
           <figure>
             <a href="./images/dev-board-wiring-5.jpg" target="_blank"><img src="./images/dev-board-wiring-5.jpg" alt="Dev Board Wiring"></a>
-            <figcaption>Fig H23. - Dev Board Wiring</figcaption>
+            <figcaption>Fig H31. - Dev Board Wiring</figcaption>
           </figure>
           <figure>
             <a href="./images/dev-board-wiring-6.jpg" target="_blank"><img src="./images/dev-board-wiring-6.jpg" alt="Dev Board Wiring"></a>
-            <figcaption>Fig H24. - Dev Board Wiring</figcaption>
+            <figcaption>Fig H32. - Dev Board Wiring</figcaption>
           </figure>
         </section>
       </section>
@@ -375,7 +421,7 @@
         <h1>Running Standalone</h1>
         <p>These kits can be used in a standalone configuration; without the debug adapter connected. Simply unplug and/or detach the debug adapter from the dev board and plug the dev board into your computer's USB port.</p>
         <figure>
-          <a href="./images/kit-running-no-debug-adapter.jpg" target="_blank"><img src="./images/kit-running-no-debug-adapter.jpg" alt="The Kit Running Standalone without Debug Adapter Connected"></a>
+          <a href="./images/kit-running-no-debug-adapter.jpg" target="_blank"><img src="./images/kit-running-no-debug-adapter.jpg" alt="The v0 Kit Running Standalone without Debug Adapter Connected"></a>
           <figcaption>Fig O1. - The v0 Kit Running Standalone without Debug Adapter Connected</figcaption>
         </figure>
       </section>
@@ -390,7 +436,7 @@
           To use DFU mode<br>
           <ul>
             <li>Unplug the dev board and debug adapter if either is plugged into your computer's USB port(s)</li>
-            <li>Flip the Boot Config switch to System/DFU mode (Number 2 in Figure H18 above)</li>
+            <li>Flip the Boot Config switch to System/DFU mode (Number 2 in Figure H26 above)</li>
             <li>Plug the dev board into your computer's USB port</li>
             <li>Verify with:<br>
             lsusb | grep 'STMicroelectronics STM Device in DFU Mode'<br>
@@ -401,7 +447,7 @@
             <li>sudo apt-get -y install dfu-util</li>
             <li>dfu-util -a 0 -s 0x8000000 -D /tmp/trezor-mcu/bootloader/combine/combined.bin</li>
             <li>Wait until finished and then unplug the dev board</li>
-            <li>Flip the Boot Config switch back to Flash mode (Number 2 in Figure H18 above)</li>
+            <li>Flip the Boot Config switch back to Flash mode (Number 2 in Figure H26 above)</li>
             <li>Plug the dev board into your computer's USB port. You're now running the code that you just stored into the MCU's flash memory.</li>
           </ul>
         </p>
