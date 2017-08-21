@@ -204,6 +204,7 @@
             <a href="./images/debug-adapter-wired-3.jpg" target="_blank"><img src="./images/debug-adapter-wired-3.jpg" alt="The Debug Adapter Wired"></a>
             <figcaption>Fig H25. - The Debug Adapter Wired</figcaption>
           </figure>
+          <p>Note: Instead of using the JTAG/SWD connector, the debug adapter's SWDIO, SWCLK, and GND pins may also be connected to the dev board's PA13, PA14, and GND pins, respectively.</p>
         </section>
         <section>
           <h1>Setting Dev Board Jumpers and Switches</h1>
@@ -414,7 +415,7 @@
         <p>In the setup process, a self-built bootloader and firmware was compiled, combined, and then loaded onto the MCU flash. To use an officially signed firmware, simply replace fw.bin in the setup process above before running prepare.py. Then run the prepare.py and load the newly created combined.bin onto the MCU.</p>
         <p>
           An officially signed firmware can be downloaded with:<br>
-          wget -O fw.bin https://wallet.trezor.io/data/firmware/trezor-1.5.0.bin
+          wget -O fw.bin https://wallet.trezor.io/data/firmware/trezor-1.5.2.bin
         </p>
       </section>
       <section>
