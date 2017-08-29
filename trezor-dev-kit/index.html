@@ -486,6 +486,13 @@
               A: Before flashing the code, you can check with: arm-none-eabi-objdump -d /tmp/trezor-mcu/bootloader/bootloader.elf | less<br>
                  You can use that to search for the memory_protect function to make sure that the generated code does not perform the steps to enable memory protection.
           </li>
+          <li>Q: How can I build a specific version of the firmware?<br>
+              A: Checkout the firmware's tag to a new branch and update the submodules. For example, to work on the version 1.5.2 firmware:<br>
+              <ul>
+                <li>git checkout -b example tags/v1.5.2</li>
+                <li>git submodule update</li>
+              </ul>
+          </li>
         </ul>
       </section>
       <section>
