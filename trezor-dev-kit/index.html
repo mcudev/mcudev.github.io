@@ -205,13 +205,25 @@
             <figcaption>Fig H25. - The Debug Adapter Wired</figcaption>
           </figure>
           <p>Note: Instead of using the JTAG/SWD connector, the debug adapter's SWDIO, SWCLK, and GND pins may also be connected to the dev board's PA13, PA14, and GND pins, respectively.</p>
+          <figure>
+            <a href="./images/debug-long-headers-1.jpg" target="_blank"><img src="./images/debug-long-headers-1.jpg" alt="The Debug Adapter Wired - Without using the JTAG/SWD Connector"></a>
+            <figcaption>Fig H26. - The Debug Adapter Wired - Without using the JTAG/SWD Connector</figcaption>
+          </figure>
+          <figure>
+            <a href="./images/debug-long-headers-2.jpg" target="_blank"><img src="./images/debug-long-headers-2.jpg" alt="The Debug Adapter Wired - Samtec SSQ-116-03-T-D Headers"></a>
+            <figcaption>Fig H27. - The Debug Adapter Wired - Samtec SSQ-116-03-T-D Headers</figcaption>
+          </figure>
+          <figure>
+            <a href="./images/debug-long-headers-3.jpg" target="_blank"><img src="./images/debug-long-headers-3.jpg" alt="The Debug Adapter Wired - Using the PA13, PA14, and GND Pins"></a>
+            <figcaption>Fig H28. - The Debug Adapter Wired - Using the PA13, PA14, and GND Pins</figcaption>
+          </figure>
         </section>
         <section>
           <h1>Setting Dev Board Jumpers and Switches</h1>
-          <p>Set the Dev Board jumpers and switches as shown in Figure H26.</p>
+          <p>Set the Dev Board jumpers and switches as shown in Figure H29.</p>
           <figure>
             <a href="./images/dev-board-jumpers-switches.jpg" target="_blank"><img src="./images/dev-board-jumpers-switches.jpg" alt="The Dev Board Jumper and Switch Configuration"></a>
-            <figcaption>Fig H26. - The Dev Board Jumper and Switch Configuration</figcaption>
+            <figcaption>Fig H29. - The Dev Board Jumper and Switch Configuration</figcaption>
           </figure>
         </section>
         <section>
@@ -232,27 +244,27 @@
           </table>
           <figure>
             <a href="./images/dev-board-wiring-1.jpg" target="_blank"><img src="./images/dev-board-wiring-1.jpg" alt="Dev Board Wiring"></a>
-            <figcaption>Fig H27. - Dev Board Wiring</figcaption>
-          </figure>
-          <figure>
-            <a href="./images/dev-board-wiring-2.jpg" target="_blank"><img src="./images/dev-board-wiring-2.jpg" alt="Dev Board Wiring"></a>
-            <figcaption>Fig H28. - Dev Board Wiring</figcaption>
-          </figure>
-          <figure>
-            <a href="./images/dev-board-wiring-3.jpg" target="_blank"><img src="./images/dev-board-wiring-3.jpg" alt="Dev Board Wiring"></a>
-            <figcaption>Fig H29. - Dev Board Wiring</figcaption>
-          </figure>
-          <figure>
-            <a href="./images/dev-board-wiring-4.jpg" target="_blank"><img src="./images/dev-board-wiring-4.jpg" alt="Dev Board Wiring"></a>
             <figcaption>Fig H30. - Dev Board Wiring</figcaption>
           </figure>
           <figure>
-            <a href="./images/dev-board-wiring-5.jpg" target="_blank"><img src="./images/dev-board-wiring-5.jpg" alt="Dev Board Wiring"></a>
+            <a href="./images/dev-board-wiring-2.jpg" target="_blank"><img src="./images/dev-board-wiring-2.jpg" alt="Dev Board Wiring"></a>
             <figcaption>Fig H31. - Dev Board Wiring</figcaption>
           </figure>
           <figure>
-            <a href="./images/dev-board-wiring-6.jpg" target="_blank"><img src="./images/dev-board-wiring-6.jpg" alt="Dev Board Wiring"></a>
+            <a href="./images/dev-board-wiring-3.jpg" target="_blank"><img src="./images/dev-board-wiring-3.jpg" alt="Dev Board Wiring"></a>
             <figcaption>Fig H32. - Dev Board Wiring</figcaption>
+          </figure>
+          <figure>
+            <a href="./images/dev-board-wiring-4.jpg" target="_blank"><img src="./images/dev-board-wiring-4.jpg" alt="Dev Board Wiring"></a>
+            <figcaption>Fig H33. - Dev Board Wiring</figcaption>
+          </figure>
+          <figure>
+            <a href="./images/dev-board-wiring-5.jpg" target="_blank"><img src="./images/dev-board-wiring-5.jpg" alt="Dev Board Wiring"></a>
+            <figcaption>Fig H34. - Dev Board Wiring</figcaption>
+          </figure>
+          <figure>
+            <a href="./images/dev-board-wiring-6.jpg" target="_blank"><img src="./images/dev-board-wiring-6.jpg" alt="Dev Board Wiring"></a>
+            <figcaption>Fig H35. - Dev Board Wiring</figcaption>
           </figure>
         </section>
       </section>
@@ -436,7 +448,7 @@
           To use DFU mode<br>
           <ul>
             <li>Unplug the dev board and debug adapter if either is plugged into your computer's USB port(s)</li>
-            <li>Flip the Boot Config switch to System/DFU mode (Number 2 in Figure H26 above)</li>
+            <li>Flip the Boot Config switch to System/DFU mode (Number 2 in Figure H29 above)</li>
             <li>Plug the dev board into your computer's USB port</li>
             <li>Verify with:<br>
             lsusb | grep 'STMicroelectronics STM Device in DFU Mode'<br>
@@ -447,7 +459,7 @@
             <li>sudo apt-get -y install dfu-util</li>
             <li>dfu-util -a 0 -s 0x8000000 -D /tmp/trezor-mcu/bootloader/combine/combined.bin</li>
             <li>Wait until finished and then unplug the dev board</li>
-            <li>Flip the Boot Config switch back to Flash mode (Number 2 in Figure H26 above)</li>
+            <li>Flip the Boot Config switch back to Flash mode (Number 2 in Figure H29 above)</li>
             <li>Plug the dev board into your computer's USB port. You're now running the code that you just stored into the MCU's flash memory.</li>
           </ul>
         </p>
