@@ -505,6 +505,12 @@
                 <li>git submodule update</li>
               </ul>
           </li>
+          <li>Q: How can I use the debugger to find all occurences of a string in memory?<br>
+              A: find 0x20000000,0x2001ffff,"123456789"
+          </li>
+          <li>Q: How can I use the debugger to watch a specific string in memory?<br>
+              A: display /s (char *) 0x20001000
+          </li>
         </ul>
       </section>
       <section>
