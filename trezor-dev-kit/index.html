@@ -165,7 +165,7 @@
           The former is an ARM&reg; Cortex&reg;-M3 and the latter is an ARM&reg; Cortex&reg;-M4.
           The Cortex-M4 architecture is a backwards compatible superset of Cortex-M3. The additional features, like hard float capability, do not matter for this project.
           The STM32F405RGT6 has 1MB of flash memory (vs the 205's 512KB), a core clock frequency adjustable up to 168MHz (including the 205's 120MHz; with matching clock tree), and 128KB of SRAM (same as the 205; the 405 has an additional 64KB of CCMRAM, giving it 192KB of usable RAM).
-          The STM32F405RGT6 is pin-to-pin compatible with the STM32F205RET6 and uses the same TRNG.
+          The STM32F405RGT6 is pin-to-pin compatible with the STM32F205RET6 and uses the same TRNG (reference: STM32F405xx datasheet section 2.1, and AN4230 section 1.2.1).
         </p>
         <p>The Waveshare Core405R dev board has an 8MHz high-speed external (HSE) crystal (matching the reference hardware), a STM32F405RGT6 MCU, a USB connector, power circuitry, SWD debug interface, boot mode select switch, and all the pins needed, broken out and available for use.</p>
       </section>
@@ -307,7 +307,7 @@
                   <li>wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/6-2017q2/gcc-arm-none-eabi-6-2017-q2-update-linux.tar.bz2</li>
                 </ul>
               </li>
-              <li><a href="http://gnuarmeclipse.github.io/openocd/" target="_blank">OpenOCD</a> (see also <a href="http://openocd.org/doc-release/pdf/openocd.pdf" target="_blank">http://openocd.org/doc-release/pdf/openocd.pdf</a>)<br>
+              <li><a href="https://gnu-mcu-eclipse.github.io/openocd/" target="_blank">OpenOCD</a> (see also <a href="http://openocd.org/doc-release/pdf/openocd.pdf" target="_blank">http://openocd.org/doc-release/pdf/openocd.pdf</a>)<br>
                 <ul>
                   <li>wget https://github.com/gnu-mcu-eclipse/openocd/releases/download/gae-0.10.0-20170418/gnuarmeclipse-openocd-debian64-0.10.0-201704182147-dev.tgz</li>
                 </ul>
@@ -330,10 +330,14 @@
               <li>export PATH="/tmp/gcc-arm-none-eabi-6-2017-q2-update/bin:/tmp/gnuarmeclipse/openocd/0.10.0-201704182147-dev/bin:$PATH"</li>
             </ul>
           </li>
-          <li>Make the USB devices that we will be using available to non-root users<br>
+          <li>Setup udev rules to make the USB devices available to non-root users<br>
             <ul>
-              <li>/bin/echo -e '# debug adapter\nSUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3748", MODE:="0666"' > /tmp/99-dev-kit.rules</li>
-              <li>/bin/echo -e '# dev board running trezor v1\nSUBSYSTEMS=="usb", ATTRS{idVendor}=="534c", ATTRS{idProduct}=="0001", MODE:="0666"' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e '# 0483:df11 STMicroelectronics STM Device in DFU Mode' > /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e 'SUBSYSTEM=="usb", ATTR{idVendor}=="0483", ATTR{idProduct}=="df11", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e '# 0483:3748 STMicroelectronics ST-LINK/V2' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e 'SUBSYSTEM=="usb", ATTR{idVendor}=="0483", ATTR{idProduct}=="3748", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e '# 534c:0001 SatoshiLabs Bitcoin Wallet [TREZOR]' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e 'SUBSYSTEM=="usb", ATTR{idVendor}=="534c", ATTR{idProduct}=="0001", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
               <li>sudo cp /tmp/99-dev-kit.rules /etc/udev/rules.d/</li>
             </ul>
           </li>
@@ -353,35 +357,27 @@
               <li>cd bootloader/combine/ && ./prepare.py</li>
             </ul>
           </li>
-          <li>Plug-in both the dev board and the debug adapter to your computer's USB ports.</li>
-          <li>Start OpenOCD<br>
-              cd /tmp/gnuarmeclipse/openocd/0.10.0-201704182147-dev && ./bin/openocd -f ./scripts/interface/stlink-v2.cfg -f ./scripts/target/stm32f4x.cfg
+          <li>Plug both the dev board and the debug adapter into your computer's USB ports.</li>
+          <li>openocd -f interface/stlink-v2.cfg -f target/stm32f4x.cfg</li>
+          <li>Open another terminal, then connect gdb to the OpenOCD process that was started in the previous step, and send OpenOCD the flash command to write the combined bootloader and firmware binary to MCU flash memory:<br>
+              arm-none-eabi-gdb --nx -ex 'target remote 127.0.0.1:3333' -ex 'monitor reset halt' -ex 'set remotetimeout unlimited' -ex 'monitor flash write_image erase /tmp/trezor-mcu/bootloader/combine/combined.bin 0x08000000' -ex 'monitor reset halt'
           </li>
-          <li>Open a second terminal then connect gdb to the OpenOCD process that we started in the previous step:<br>
-              /tmp/gcc-arm-none-eabi-6-2017-q2-update/bin/arm-none-eabi-gdb --nx -ex 'target remote localhost:3333' -ex 'monitor reset halt'
-          </li>
-          <li>Within gdb, send OpenOCD the flash command to write the combined bootloader and firmware binary to MCU flash memory:<br>
+          <li>Flash has now been written. Set some test breakpoints and practice debugging code:<br>
             <ul>
-              <li>(gdb) monitor flash write_image erase /tmp/trezor-mcu/bootloader/combine/combined.bin 0x08000000</li>
-            </ul>
-          </li>
-          <li>At this point, the flash has been written. Now, set some test breakpoints and simulate debugging code:<br>
-            <ul>
-              <li>(gdb) monitor reset halt</li>
               <li>(gdb) add-symbol-file /tmp/trezor-mcu/bootloader/bootloader.elf 0x08000000</li>
-              <li>(gdb) break main</li>
-              <li>(gdb) break memory_protect</li>
-              <li>(gdb) break load_app</li>
-              <li>(gdb) continue</li>
-              <li>(gdb) layout asm</li>
-              <li>(gdb) continue</li>
-              <li>(gdb) continue</li>
-              <li>(gdb) delete</li>
+              <li>(gdb) b *reset_handler</li>
+              <li>(gdb) b *memory_protect</li>
+              <li>(gdb) b *load_app</li>
+              <li>(gdb) layout regs</li>
+              <li>(gdb) si</li>
+              <li>(gdb) c</li>
+              <li>(gdb) c</li>
+              <li>(gdb) d</li>
               <li>(gdb) remove-symbol-file /tmp/trezor-mcu/bootloader/bootloader.elf</li>
               <li>(gdb) add-symbol-file /tmp/trezor-mcu/firmware/trezor.elf 0x08010000</li>
-              <li>(gdb) break main</li>
-              <li>(gdb) continue</li>
-              <li>(gdb) continue</li>
+              <li>(gdb) b *main</li>
+              <li>(gdb) c</li>
+              <li>(gdb) c</li>
               <li>(gdb) Press Ctrl + C to interrupt software execution</li>
               <li>(gdb) quit</li>
             </ul>
@@ -465,7 +461,6 @@
       </section>
       <section>
         <h1>Getting Info About and Erasing MCU Flash</h1>
-        <p>Here are some more gdb-to-openocd passthrough commands for working with the MCU flash memory.</p>
         <ul>
           <li>Retrieve info about current state of the flash memory sectors<br>
           (gdb) monitor flash info 0
@@ -476,9 +471,9 @@
         </ul>
       </section>
       <section>
-        <h1>Compiling the latest version of OpenOCD</h1>
-        First, see: https://sourceforge.net/p/openocd/code/ci/master/tree/README<br>
+        <h1>Compiling and Using the Latest Version of OpenOCD</h1>
         <ul>
+          <li>Reference: https://sourceforge.net/p/openocd/code/ci/master/tree/README</li>
           <li>git clone git://git.code.sf.net/p/openocd/code.git openocd</li>
           <li>sudo apt-get -y install libtool autoconf automake texinfo libusb-0.1-4 libusb-1.0-0</li>
           <li>cd openocd/</li>
@@ -486,9 +481,8 @@
           <li>./configure</li>
           <li>make</li>
           <li>sudo make install</li>
+          <li>openocd -f interface/stlink-v2.cfg -f target/stm32f4x.cfg</li>
         </ul>
-        Then you can run with:<br>
-        openocd -f /usr/local/share/openocd/scripts/interface/stlink-v2.cfg -f /usr/local/share/openocd/scripts/target/stm32f4x.cfg
       </section>
       <section>
         <h1>Questions</h1>
@@ -509,6 +503,14 @@
           </li>
           <li>Q: How can I use the debugger to watch a specific string in memory?<br>
               A: display /s (char *) 0x20001000
+          </li>
+          <li>Q: How can I veriy that the udev rules applied correctly to my USB device?<br>
+              A: To verify, for example, that your dev kit (running TREZOR firmware) configured properly:<br>
+                 > lsusb | grep '534c:0001'<br>
+                 Bus 002 Device 007: ID 534c:0001 SatoshiLabs Bitcoin Wallet [TREZOR]<br>
+                 > ls -al /dev/bus/usb/002/007<br>
+                 crw-rw-rw- 1 root root ...<br>
+                 If the last line of your output matches the line above, then the udev rules are working.<br>
           </li>
         </ul>
       </section>
