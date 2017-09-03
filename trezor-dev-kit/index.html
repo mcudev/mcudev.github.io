@@ -294,9 +294,9 @@
             <ul>
               <li>sudo apt-get update</li>
               <li>sudo apt-get -y install git python-pip</li>
-              <li>sudo pip install ecdsa</li>
+              <li>sudo -H pip install ecdsa</li>
               <li>sudo apt-get -y install python-dev cython libusb-1.0-0-dev libudev-dev (note: required for python-trezor testing)</li>
-              <li>sudo pip install setuptools click trezor (note: required for python-trezor testing)</li>
+              <li>sudo -H pip install setuptools click trezor (note: required for python-trezor testing)</li>
               <li>sudo apt-get -y install openjdk-8-jdk (note: required for the eclipse GUI)</li>
             </ul>
           </li>
@@ -327,7 +327,8 @@
           </li>
           <li>Add extracted tool binaries to PATH environment variable<br>
             <ul>
-              <li>export PATH="/tmp/gcc-arm-none-eabi-6-2017-q2-update/bin:/tmp/gnuarmeclipse/openocd/0.10.0-201704182147-dev/bin:$PATH"</li>
+              <li>/bin/echo 'export PATH="/tmp/gcc-arm-none-eabi-6-2017-q2-update/bin:/tmp/gnuarmeclipse/openocd/0.10.0-201704182147-dev/bin:$PATH"' >> ~/.bashrc</li>
+              <li>source ~/.bashrc</li>
             </ul>
           </li>
           <li>Setup udev rules to make the USB devices available to non-root users<br>
