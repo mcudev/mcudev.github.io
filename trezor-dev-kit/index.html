@@ -350,8 +350,9 @@
               Note: The "export MEMORY_PROTECT=0" is what controls the code that locks the bootloader's flash memory on your dev board.<br>
               Warning: If you compile with MEMORY_PROTECT=1 (the default if not set as directed below), and run it on your dev board, you will lock your MCU's bootloader flash memory sectors and permanently disable debug capabilities.<br>
             <ul>
-              <li>git clone --recursive https://github.com/trezor/trezor-mcu.git</li>
+              <li>git clone https://github.com/trezor/trezor-mcu.git</li>
               <li>cd trezor-mcu/</li>
+              <li>git submodule update --init</li>
               <li>make -C vendor/libopencm3/</li>
               <li>export MEMORY_PROTECT=0</li>
               <li>make</li>
