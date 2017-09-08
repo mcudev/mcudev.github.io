@@ -518,6 +518,12 @@
                  crw-rw-rw- 1 root root ...<br>
                  If the last line of your output matches the line above, then the udev rules are working.<br>
           </li>
+          <li>Q: How can I disassemble a binary ".bin" file?<br>
+              A: arm-none-eabi-objdump -b binary -D -marm -M force-thumb trezor-1.5.2.bin
+          </li>
+          <li>Q: How can I write to a specific memory location while debugging?<br>
+              A: set *(unsigned int *)0x20010000 = 0x11223344
+          </li>
         </ul>
       </section>
       <section>
