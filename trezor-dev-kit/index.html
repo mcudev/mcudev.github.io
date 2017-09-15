@@ -366,11 +366,10 @@
           <li>Plug both the dev board and the debug adapter into your computer's USB ports.</li>
           <li>openocd -f interface/stlink-v2.cfg -f target/stm32f4x.cfg</li>
           <li>Open another terminal, then connect gdb to the OpenOCD process that was started in the previous step, and send OpenOCD the flash command to write the combined bootloader and firmware binary to MCU flash memory:<br>
-              arm-none-eabi-gdb --nx -ex 'target remote 127.0.0.1:3333' -ex 'monitor reset halt' -ex 'set remotetimeout unlimited' -ex 'monitor flash write_image erase /tmp/trezor-mcu/bootloader/combine/combined.bin 0x08000000' -ex 'monitor reset halt'
+              arm-none-eabi-gdb --nx -ex 'set remotetimeout unlimited' -ex 'set confirm off' -ex 'target remote 127.0.0.1:3333' -ex 'monitor reset halt' -ex 'monitor flash write_image erase /tmp/trezor-mcu/bootloader/combine/combined.bin 0x08000000' -ex 'monitor reset halt' -ex 'add-symbol-file /tmp/trezor-mcu/bootloader/bootloader.elf 0x08000000'
           </li>
           <li>Flash has now been written. Set some test breakpoints and practice debugging code:<br>
             <ul>
-              <li>(gdb) add-symbol-file /tmp/trezor-mcu/bootloader/bootloader.elf 0x08000000</li>
               <li>(gdb) b *reset_handler</li>
               <li>(gdb) b *memory_protect</li>
               <li>(gdb) b *load_app</li>
