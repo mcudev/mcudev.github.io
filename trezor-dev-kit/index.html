@@ -352,8 +352,10 @@
             <ul>
               <li>git clone https://github.com/trezor/trezor-mcu.git</li>
               <li>cd trezor-mcu/</li>
-              <li>git submodule update --init</li>
+              <li>git submodule update --init --recursive</li>
               <li>make -C vendor/libopencm3/</li>
+              <li>make -C vendor/nanopb/generator/proto/</li>
+              <li>make -C firmware/protob/</li>
               <li>export MEMORY_PROTECT=0</li>
               <li>make</li>
               <li>make -C bootloader/ align</li>
@@ -366,7 +368,7 @@
           <li>Plug both the dev board and the debug adapter into your computer's USB ports.</li>
           <li>openocd -f interface/stlink-v2.cfg -f target/stm32f4x.cfg</li>
           <li>Open another terminal, then connect gdb to the OpenOCD process that was started in the previous step, and send OpenOCD the flash command to write the combined bootloader and firmware binary to MCU flash memory:<br>
-              arm-none-eabi-gdb --nx -ex 'set remotetimeout unlimited' -ex 'set confirm off' -ex 'target remote 127.0.0.1:3333' -ex 'monitor reset halt' -ex 'monitor flash write_image erase /tmp/trezor-mcu/bootloader/combine/combined.bin 0x08000000' -ex 'monitor reset halt' -ex 'add-symbol-file /tmp/trezor-mcu/bootloader/bootloader.elf 0x08000000'
+              arm-none-eabi-gdb --nx -ex 'set remotetimeout unlimited' -ex 'set confirm off' -ex 'target remote 127.0.0.1:3333' -ex 'monitor reset halt' -ex 'monitor flash write_image erase /tmp/trezor-mcu/bootloader/combine/combined.bin 0x08000000' -ex 'monitor reset halt' /tmp/trezor-mcu/bootloader/bootloader.elf
           </li>
           <li>Flash has now been written. Set some test breakpoints and practice debugging code:<br>
             <ul>
@@ -378,15 +380,14 @@
               <li>(gdb) c</li>
               <li>(gdb) c</li>
               <li>(gdb) d</li>
-              <li>(gdb) remove-symbol-file /tmp/trezor-mcu/bootloader/bootloader.elf</li>
-              <li>(gdb) add-symbol-file /tmp/trezor-mcu/firmware/trezor.elf 0x08010000</li>
+              <li>(gdb) file ../../firmware/trezor.elf</li>
               <li>(gdb) b *main</li>
               <li>(gdb) c</li>
               <li>(gdb) c</li>
               <li>(gdb) Press Ctrl + C to interrupt software execution</li>
               <li>(gdb) quit</li>
             </ul>
-            <p>Note that the symbol files were added and removed above at points in the debugging process near bootloader-entry and bootloader-exit/firmware-entry. It was done this way to add breakpoints based on symbols relevant to the code being executed.</p>
+            <p>Note that the symbol files were changed above at a point in the debugging process near bootloader-exit/firmware-entry. This was done in order to add breakpoints based on symbols relevant to the code being executed.</p>
             <p>Also, be sure to check the display module and progress past the unofficial firmware warning message by pressing the appropriate buttons. Otherwise, it will seem as though your debugging session has simply stopped working. In fact, the code is just waiting for your user input.</p>
           </li>
           <li>Done flashing the software to the dev board and debugging. Kill the OpenOCD process and unplug the debug adapter and dev board.</li>
