@@ -2,7 +2,7 @@
 <html lang="en-US">
   <head>
     <meta charset="utf-8">
-    <title>TREZOR Dev Kits</title>
+    <title>TREZOR One Dev Kits</title>
     <link rel="stylesheet" href="../css/base.css">
   </head>
   <body>
@@ -347,7 +347,7 @@
             </ul>
           </li>
           <li>Download, build, and package the TREZOR v1 bootloader and firmware from source code<br>
-              Note: The "export MEMORY_PROTECT=0" is what controls the code that locks the bootloader's flash memory on your dev board.<br>
+              <em>Note: The "export MEMORY_PROTECT=0" is what controls the code that locks the bootloader's flash memory on your dev board.</em><br>
               Warning: If you compile with MEMORY_PROTECT=1 (the default if not set as directed below), and run it on your dev board, you will lock your MCU's bootloader flash memory sectors and permanently disable debug capabilities.<br>
             <ul>
               <li>git clone https://github.com/trezor/trezor-mcu.git</li>
@@ -424,6 +424,7 @@
       <h1>Going Further</h1>
       <section>
         <h1>Loading and Running an Officially Signed Firmware</h1>
+        <p>UPDATE: Loading officially signed firmware versions 1.6.1 and later onto your dev kit is NOT recommended. Doing so, will result in your bootloader flash memory sectors being locked. For more info, see <a href="https://github.com/trezor/trezor-mcu/commit/9588e8f2736b60916f51e470deb18f55112a6ebc" target="_blank">this</a> and <a href="https://blog.trezor.io/trezor-one-firmware-update-1-6-1-eecd0534ab95" target="_blank">this</a>.</p>
         <p>In the setup process, a self-built bootloader and firmware was compiled, combined, and then loaded onto the MCU flash. To use an officially signed firmware, simply replace fw.bin in the setup process above before running prepare.py. Then run the prepare.py and load the newly created combined.bin onto the MCU.</p>
         <p>
           An officially signed firmware can be downloaded with:<br>
@@ -539,6 +540,7 @@
           <li><a target="_blank" href="https://en.bitcoin.it/wiki/Hardware_wallet">Bitcoin Hardware Wallet Wiki</a></li>
           <li><a target="_blank" href="http://saleemrashid.com/2017/08/17/extracting-trezor-secrets-sram/">Saleem Rashid - Extracting TREZOR secrets from SRAM</a></li>
           <li><a target="_blank" href="https://www.usenix.org/system/files/conference/woot17/woot17-paper-obermaier.pdf">Research Paper: Shedding too much Light on a Microcontroller's Firmware Protection</a></li>
+          <li><a target="_blank" href="https://blog.trezor.io/trezor-one-firmware-update-1-6-1-eecd0534ab95">TREZOR Blog: TREZOR One: Firmware Update 1.6.1 - vulnerability disclosure</a></li>
         </ul>
       </section>
     </section>
