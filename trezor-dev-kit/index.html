@@ -7,16 +7,16 @@
   </head>
   <body>
     <header>
-      <h1>TREZOR Dev Kits</h1>
+      <h1>TREZOR One Dev Kits</h1>
     </header>
     <section>
       <h1>Introduction</h1>
-      <p>This hobbyist project documents kits that developers can use to explore, develop, test, and debug the open source TREZOR hardware and software.</p>
+      <p>This hobbyist project documents kits that developers can use to explore, develop, test, and debug the open source TREZOR One hardware and software.</p>
     </section>
     <section>
       <h1>Warning</h1>
-      <p>These kits do NOT produce production TREZOR cryptocurrency hardware wallet devices.</p>
-      <p>If you want an official TREZOR hardware wallet, see: <a href="https://shop.trezor.io/" target="_blank">https://shop.trezor.io/</a></p>
+      <p>These kits do NOT produce production TREZOR One cryptocurrency hardware wallet devices.</p>
+      <p>If you want an official TREZOR One hardware wallet, see: <a href="https://shop.trezor.io/" target="_blank">https://shop.trezor.io/</a></p>
       <p>When contrasted to official production hardware, these kits are less safe to use for non-development purposes.</p>
       <p>
         Necessarily, different selections were made for the key security properties of these developer kits vs. production hardware.
@@ -32,7 +32,7 @@
     <section>
       <h1>Hardware</h1>
       <section>
-        <h1>TREZOR v1 Open Source Hardware Reference Documentation</h1>
+        <h1>TREZOR One Open Source Hardware Reference Documentation</h1>
         <ul>
           <li><a href="https://github.com/trezor/trezor-hw" target="_blank">https://github.com/trezor/trezor-hw</a></li>
           <li><a href="https://raw.githubusercontent.com/trezor/trezor-hw/master/electronics/trezor.bom.txt" target="_blank">BOM</a></li>
@@ -271,7 +271,7 @@
     <section>
       <h1>Software</h1>
       <section>
-        <h1>TREZOR v1 Open Source Software Main Repository</h1>
+        <h1>TREZOR One Open Source Software Main Repository</h1>
         <ul>
           <li><a href="https://github.com/trezor/trezor-mcu" target="_blank">https://github.com/trezor/trezor-mcu</a></li>
         </ul>
@@ -280,49 +280,44 @@
         <h1>Setup</h1>
         <p>
           This setup process comprises steps to install development and debugging tools on a temporary computer, then build and install a bootloader and firmware on the kit's MCU.<br>
-          The following setup process was documented while running an Ubuntu GNOME 17.04 Live CD (Zesty Zapus) as user ubuntu-gnome.
+          The following setup process was documented while running an <a href="http://releases.ubuntu.com/releases/18.04/" target="_blank">Ubuntu 18.04 LTS Desktop (Bionic Beaver) Live CD</a> as user ubuntu.
         </p>
         <ol>
           <li>Connect to the Internet</li>
           <li>cd /tmp/</li>
           <li>Install required software packages<br>
             <ul>
+              <li>sudo add-apt-repository universe</li>
               <li>sudo apt-get update</li>
-              <li>sudo apt-get -y install git python-pip</li>
-              <li>sudo -H pip install ecdsa</li>
-              <li>sudo apt-get -y install python-dev cython libusb-1.0-0-dev libudev-dev (note: required for python-trezor testing)</li>
-              <li>sudo -H pip install setuptools click trezor (note: required for python-trezor testing)</li>
-              <li>sudo apt-get -y install openjdk-8-jdk (note: required for the eclipse GUI)</li>
+              <li>sudo apt-get -y install git openocd make protobuf-compiler libprotobuf-dev python-pip</li>
+              <li>sudo -H pip install ecdsa protobuf</li>
+              <li>sudo apt-get -y install python3-dev python3-pip cython3 libusb-1.0-0-dev libudev-dev libssl-dev (note: required for python-trezor testing)</li>
+              <li>sudo -H pip3 install trezor[ethereum,hidapi] (note: required for python-trezor testing)</li>
+              <li>sudo apt-get -y install openjdk-8-jdk (note: <a href="https://www.eclipse.org/eclipse/development/readme_eclipse_4.8.php#mozTocId559320" target="_blank">at least a Java SE 8 JRE is required for the eclipse GUI</a>)</li>
             </ul>
           </li>
           <li>Download tools<br>
             <ul>
               <li><a href="https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads" target="_blank">GNU ARM Embedded Toolchain</a><br>
                 <ul>
-                  <li>wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/6-2017q2/gcc-arm-none-eabi-6-2017-q2-update-linux.tar.bz2</li>
+                  <li>wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/7-2018q2/gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2</li>
                 </ul>
               </li>
-              <li><a href="https://gnu-mcu-eclipse.github.io/openocd/" target="_blank">OpenOCD</a> (see also <a href="http://openocd.org/doc-release/pdf/openocd.pdf" target="_blank">http://openocd.org/doc-release/pdf/openocd.pdf</a>)<br>
+              <li><a href="https://www.eclipse.org/downloads/eclipse-packages/" target="_blank">Eclipse IDE for C/C++ Developers</a> (get the latest 64-bit Linux version available; Eclipse Photon R (4.8.0) or newer)<br>
                 <ul>
-                  <li>wget https://github.com/gnu-mcu-eclipse/openocd/releases/download/gae-0.10.0-20170418/gnuarmeclipse-openocd-debian64-0.10.0-201704182147-dev.tgz</li>
-                </ul>
-              </li>
-              <li><a href="https://www.eclipse.org/downloads/eclipse-packages/" target="_blank">Eclipse IDE for C/C++ Developers</a> (get the latest 64-bit Linux version available; Oxygen or newer)<br>
-                <ul>
-                  <li>wget http://mirror.math.princeton.edu/pub/eclipse/technology/epp/downloads/release/oxygen/R/eclipse-cpp-oxygen-R-linux-gtk-x86_64.tar.gz</li>
+                  <li>wget http://mirror.math.princeton.edu/pub/eclipse/technology/epp/downloads/release/photon/R/eclipse-cpp-photon-R-linux-gtk-x86_64.tar.gz</li>
                 </ul>
               </li>
             </ul>
           </li>
           <li>Extract tools<br>
             <ul>
-              <li>tar xjf gcc-arm-none-eabi-6-2017-q2-update-linux.tar.bz2</li>
-              <li>tar xzf gnuarmeclipse-openocd-debian64-0.10.0-201704182147-dev.tgz</li>
+              <li>tar xjf gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2</li>
             </ul>
           </li>
           <li>Add extracted tool binaries to PATH environment variable<br>
             <ul>
-              <li>/bin/echo 'export PATH="/tmp/gcc-arm-none-eabi-6-2017-q2-update/bin:/tmp/gnuarmeclipse/openocd/0.10.0-201704182147-dev/bin:$PATH"' >> ~/.bashrc</li>
+              <li>/bin/echo 'export PATH="/tmp/gcc-arm-none-eabi-7-2018-q2-update/bin:$PATH"' >> ~/.bashrc</li>
               <li>source ~/.bashrc</li>
             </ul>
           </li>
@@ -337,28 +332,28 @@
               <li>/bin/echo -e '# 534c:0001 SatoshiLabs Bitcoin Wallet [TREZOR]' >> /tmp/99-dev-kit.rules</li>
               <li>/bin/echo -e 'SUBSYSTEM=="usb", ATTR{idVendor}=="534c", ATTR{idProduct}=="0001", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
               <li>/bin/echo -e 'KERNEL=="hidraw*", ATTRS{idVendor}=="534c", ATTRS{idProduct}=="0001", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
-              <li>/bin/echo -e '# 1209:53c0 SatoshiLabs TREZOR v2 Bootloader' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e '# 1209:53c0 SatoshiLabs TREZOR Model T Bootloader' >> /tmp/99-dev-kit.rules</li>
               <li>/bin/echo -e 'SUBSYSTEM=="usb", ATTR{idVendor}=="1209", ATTR{idProduct}=="53c0", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
               <li>/bin/echo -e 'KERNEL=="hidraw*", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="53c0", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
-              <li>/bin/echo -e '# 1209:53c1 SatoshiLabs TREZOR v2' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e '# 1209:53c1 SatoshiLabs TREZOR Model T' >> /tmp/99-dev-kit.rules</li>
               <li>/bin/echo -e 'SUBSYSTEM=="usb", ATTR{idVendor}=="1209", ATTR{idProduct}=="53c1", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
               <li>/bin/echo -e 'KERNEL=="hidraw*", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="53c1", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
               <li>sudo cp /tmp/99-dev-kit.rules /etc/udev/rules.d/</li>
             </ul>
           </li>
-          <li>Download, build, and package the TREZOR v1 bootloader and firmware from source code<br>
+          <li>Download, build, and package the TREZOR One bootloader and firmware from source code<br>
               <b>Note: The "export MEMORY_PROTECT=0" is what controls the code that locks the bootloader's flash memory on your dev board.</b><br>
               Warning: If you compile with MEMORY_PROTECT=1 (the default if not set as directed below), and run it on your dev board, you will lock your MCU's bootloader flash memory sectors and permanently disable debug capabilities.<br>
             <ul>
               <li>git clone https://github.com/trezor/trezor-mcu.git</li>
               <li>cd trezor-mcu/</li>
               <li>git submodule update --init --recursive</li>
-              <li>make -C vendor/libopencm3/</li>
-              <li>make -C vendor/nanopb/generator/proto/</li>
-              <li>make -C firmware/protob/</li>
+              <li>make -C vendor/libopencm3/ lib/stm32/f2</li>
               <li>export MEMORY_PROTECT=0</li>
               <li>make</li>
               <li>make -C bootloader/ align</li>
+              <li>make -C vendor/nanopb/generator/proto/</li>
+              <li>make -C firmware/protob/</li>
               <li>make -C firmware/ sign</li>
               <li>cp bootloader/bootloader.bin bootloader/combine/bl.bin</li>
               <li>cp firmware/trezor.bin bootloader/combine/fw.bin</li>
@@ -409,7 +404,7 @@
           <li>Install eclipse so that a graphical environment can be used for debugging:<br>
             <ul>
               <li>cd /tmp/</li>
-              <li>tar xzf eclipse-cpp-oxygen-R-linux-gtk-x86_64.tar.gz</li>
+              <li>tar xzf eclipse-cpp-photon-R-linux-gtk-x86_64.tar.gz</li>
               <li>mkdir -p /tmp/eclipse-workspace</li>
             </ul>
           </li>
@@ -484,14 +479,13 @@
         <h1>Compiling and Using the Latest Version of OpenOCD</h1>
         <ul>
           <li>Reference: https://sourceforge.net/p/openocd/code/ci/master/tree/README</li>
-          <li>git clone git://git.code.sf.net/p/openocd/code.git openocd</li>
-          <li>sudo apt-get -y install libtool autoconf automake texinfo libusb-0.1-4 libusb-1.0-0</li>
-          <li>cd openocd/</li>
+          <li>git clone https://git.code.sf.net/p/openocd/code openocd-code</li>
+          <li>sudo apt-get -y install libtool autoconf automake texinfo libusb-0.1-4 libusb-1.0-0 pkg-config</li>
+          <li>cd openocd-code/</li>
           <li>./bootstrap</li>
           <li>./configure</li>
           <li>make</li>
           <li>sudo make install</li>
-          <li>openocd -f interface/stlink-v2.cfg -f target/stm32f4x.cfg</li>
         </ul>
       </section>
       <section>
@@ -502,9 +496,9 @@
                  You can use that to search for the memory_protect function to make sure that the generated code does not perform the steps to enable memory protection.
           </li>
           <li>Q: How can I build a specific version of the firmware?<br>
-              A: Checkout the firmware's tag to a new branch and update the submodules. For example, to work on the version 1.5.2 firmware:<br>
+              A: Checkout the firmware's tag to a new branch and update the submodules. For example, to work on the version 1.6.2 firmware:<br>
               <ul>
-                <li>git checkout -b example tags/v1.5.2</li>
+                <li>git checkout -b example tags/v1.6.2</li>
                 <li>git submodule update</li>
               </ul>
           </li>
