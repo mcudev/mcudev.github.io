@@ -396,9 +396,13 @@
               <li>python3 setup.py prebuild</li>
               <li>./trezorctl wipe_device</li>
               <li>./trezorctl load_device -m 'fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun fun agent'</li>
-              <li>./trezorctl get_address -c Bitcoin -n "Bitcoin/0'/0/0"</li>
-              <li>./trezorctl get_address -c Litecoin -n "Litecoin/0'/0/0"</li>
-              <li>./trezorctl get_address -c Namecoin -n "Namecoin/0'/0/0"</li>
+              <li>./trezorctl get_address -c Bitcoin -t address -n "m/44'/0'/0'/0/0"<br>(note: this is a legacy base58 encoded p2pkh)</li>
+              <li>./trezorctl get_address -c Bitcoin -t p2shsegwit -n "m/49'/0'/0'/0/0"<br>(note: this is a base58 encoded p2wpkh-p2sh)</li>
+              <li>./trezorctl get_address -c Bitcoin -t segwit -n "m/84'/0'/0'/0/0"<br>(note: this is a bech32 encoded p2wpkh)</li>
+              <li>./trezorctl get_address -c Litecoin -t address -n "m/44'/2'/0'/0/0"</li>
+              <li>./trezorctl get_address -c Litecoin -t p2shsegwit -n "m/49'/2'/0'/0/0"</li>
+              <li>./trezorctl get_address -c Litecoin -t segwit -n "m/84'/2'/0'/0/0"</li>
+              <li>./trezorctl get_address -c Namecoin -t address -n "m/44'/7'/0'/0/0"</li>
             </ul>
           </li>
           <li>Install eclipse so that a graphical environment can be used for debugging:<br>
@@ -476,9 +480,9 @@
         </ul>
       </section>
       <section>
-        <h1>Compiling and Using the Latest Version of OpenOCD</h1>
+        <h1>Compiling and Using the Latest Version of <a href="http://openocd.org/doc-release/pdf/openocd.pdf" target="_blank">OpenOCD</a></h1>
         <ul>
-          <li>Reference: https://sourceforge.net/p/openocd/code/ci/master/tree/README</li>
+          <li><a href="https://sourceforge.net/p/openocd/code/ci/master/tree/README" target="_blank">Reference Info</a></li>
           <li>git clone https://git.code.sf.net/p/openocd/code openocd-code</li>
           <li>sudo apt-get -y install libtool autoconf automake texinfo libusb-0.1-4 libusb-1.0-0 pkg-config</li>
           <li>cd openocd-code/</li>
@@ -486,6 +490,20 @@
           <li>./configure</li>
           <li>make</li>
           <li>sudo make install</li>
+        </ul>
+      </section>
+      <section>
+        <h1>Upgrading ST-LINK USB Debug Adapter Firmware</h1>
+        <ul>
+          <li><a href="https://www.st.com/en/development-tools/stsw-link007.html" target="_blank">Reference Info</a></li>
+          <li>cd /tmp/</li>
+          <li>sudo apt-get -y install libusb-1.0-0 openjdk-8-jdk</li>
+          <li>wget https://www.st.com/content/ccc/resource/technical/software/firmware/08/ac/de/f3/b0/d9/46/c7/stsw-link007.zip/files/stsw-link007.zip/_jcr_content/translations/en.stsw-link007.zip<br>(note: This downloads STLinkUpgrade tool version 3.2.11. Visit the <a href="https://www.st.com/en/development-tools/stsw-link007.html" target="_blank">Reference Info</a> to download the latest version [and thus the latest firmware upgrade.])</li>
+          <li>unzip en.stsw-link007.zip</li>
+          <li>cd stsw-link007/AllPlatforms/</li>
+          <li>Perform the steps in section "Setup udev rules to make the USB devices available to non-root users", if you have not already done so.</li>
+          <li>java -jar STLinkUpgrade.jar</li>
+          <li>Plug USB debug adapter into host computer, refresh the device list, then select the device and click the button to open in update mode. Click the button to upgrade when it becomes enabled.</li>
         </ul>
       </section>
       <section>
