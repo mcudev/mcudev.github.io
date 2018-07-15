@@ -1,0 +1,9 @@
+figure {
+  display: inline-block;
+  width: 750px;
+}
+
+li > img {
+  width: 144px;
+}
+

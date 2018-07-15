@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>TREZOR Model T Dev Kit</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="./override.css">
+  </head>
+  <body>
+    <header>
+      <h1>TREZOR Model T Dev Kit</h1>
+    </header>
+    <section>
+      <h1>Introduction</h1>
+      <p>This hobbyist project documents a kit that developers can use to explore, develop, test, and debug the open source TREZOR Model T hardware and software.</p>
+    </section>
+    <section>
+      <h1>Warning</h1>
+      <p>This kit does NOT produce a production TREZOR Model T cryptocurrency hardware wallet device.</p>
+      <p>If you want an official TREZOR Model T hardware wallet, see: <a href="https://shop.trezor.io/" target="_blank">https://shop.trezor.io/</a></p>
+      <p>When contrasted to official production hardware, this kit is less safe to use for non-development purposes.</p>
+      <p>
+        Necessarily, different selections were made for key security properties of this developer kit vs. production hardware.
+        For example, when used as documented here, this kit purposefully leaves debug capabilities enabled, and does not apply write protections to boardloader flash memory.
+        This is so that developers may repeatedly develop, test, and debug all types of changes.
+      </p>
+      <p>
+        Production hardware irreversibly disables debug capabilities and Device Firmware Upgrade (DFU) mode, and protects key memory areas as part of reducing attack surface and increasing depth of defenses.
+        There may be other subtle, yet meaningful, weaknesses as well, depending on your usage and threat model.
+      </p>
+      <p>
+        This kit is not a perfect analog to the actual production hardware.
+        It uses a very similar, yet different MCU (STM32F429ZIT6 vs the Model T's STM32F427VIT6).
+        Certain features, for example the ability to reset the touch panel independently from the display, are not made available on the display module used by this kit.
+        There are other differences such as the display driver chip not being the same as the one used in production Model T devices (we support both driver chips in the code).
+        But, this kit is "close enough" and comprised of easily obtainable, relatively inexpensive, off-the-shelf components which allowed it to be developed alongside, and actually used for development of the production Model T.
+      </p>
+      <p>USE THIS KIT AT YOUR OWN RISK</p>
+    </section>
+    <section>
+      <h1>Hardware</h1>
+      <section>
+        <h1>TREZOR Model T Open Source Hardware Reference Documentation</h1>
+        <ul>
+          <li><a href="https://github.com/trezor/trezor-core/blob/master/docs/hardware.md" target="_blank">https://github.com/trezor/trezor-core/blob/master/docs/hardware.md</a></li>
+        </ul>
+        <p>
+          A nice thing about this kit is that it was used to openly develop the TREZOR Model T. Due to that there is already some detailed documentation about the kit available at the link above.
+          The purpose of this document is not to duplicate that documentation, but rather to detail how to put the kit together and use it.
+          Please reference the TREZOR Core hardware documentation for the latest information.
+        </p>
+        <p>
+          Here's what the completed kit looks like:
+        </p>
+        <figure>
+          <a href="./images/kit.png" target="_blank"><img src="./images/kit.png" alt="The completed kit shown alongside a Production TREZOR Model T for scale"></a>
+          <figcaption>Fig H1. - The completed kit shown alongside a Production TREZOR Model T for scale. This is one of the actual kits used to develop the Model T software. Coincidentallly, the photo kind of looks like a parent giving its child a hug.</figcaption>
+        </figure>
+        <br>
+        <figure>
+          <a href="./images/kit-bottom.png" target="_blank"><img src="./images/kit-bottom.png" alt="The completed kit (bottom)"></a>
+          <figcaption>Fig H2. - The completed kit (bottom)</figcaption>
+        </figure>
+      </section>
+      <section>
+        <h1>Setup</h1>
+        <section>
+          <h1>Wiring the Dev Board</h1>
+          <p>
+            First, be sure to set the jumpers as seen in Fig H3 and Fig H4.
+            Second, go through the pinout tables for the <a href="https://github.com/trezor/trezor-core/blob/master/docs/hardware.md#pinout" target="_blank">display</a> and the <a href="https://github.com/trezor/trezor-core/blob/master/docs/hardware.md#pinout-1" target="_blank">touch panel</a> and put wires on the dev board pins (aka MCU pins) that have a corresponding display module pin noted in the tables.
+            If you need help finding the dev board pins that map to the display module, see Fig H9 and Fig H10.
+            Next, connect the wires over to the correct display module pin. The display module pins are numbered 1 through 40 (see Fig H5).
+            All you need to do is connect the wires as stated in the pinout tables.
+            Finally, add wires to the microSD socket as shown in Fig H6 and use the silkscreen on the microSD socket as your guide to connect those wires over to the dev board pins as specified in the <a href="https://github.com/trezor/trezor-core/blob/master/docs/hardware.md#pinout-2" target="_blank">microSD socket pinout table</a>.
+            When you've completed the wiring, you'll have something that looks like Fig H7. Plug-in the USB cables, and you're done (Fig H8).
+          </p>
+          <figure>
+            <a href="./images/setup-1.png" target="_blank"><img src="./images/setup-1.png" alt="The dev board as it first arrives (top)"></a>
+            <figcaption>Fig H3. - The dev board as it first arrives (top)</figcaption>
+          </figure>
+          <figure>
+            <a href="./images/setup-2.png" target="_blank"><img src="./images/setup-2.png" alt="The dev board as it first arrives (bottom)"></a>
+            <figcaption>Fig H4. - The dev board as it first arrives (bottom)</figcaption>
+          </figure>
+          <figure>
+            <a href="./images/setup-3.png" target="_blank"><img src="./images/setup-3.png" alt="Note the display module pin numbering guides on the left and right sides of the 40 pin header (39, 40, 1, and 2)"></a>
+            <figcaption>Fig H5. - Note the display module pin numbering guides on the left and right sides of the 40 pin header (39, 40, 1, and 2)</figcaption>
+          </figure>
+          <figure>
+            <a href="./images/setup-4.png" target="_blank"><img src="./images/setup-4.png" alt="Note the microSD socket silkscreen pin guides"></a>
+            <figcaption>Fig H6. - Note the microSD socket silkscreen pin guides</figcaption>
+          </figure>
+          <figure>
+            <a href="./images/setup-5.png" target="_blank"><img src="./images/setup-5.png" alt="Display module and microSD socket wiring complete"></a>
+            <figcaption>Fig H7. - Display module and microSD socket wiring complete</figcaption>
+          </figure>
+          <figure>
+            <a href="./images/setup-6.png" target="_blank"><img src="./images/setup-6.png" alt="Display module and microSD socket wiring completewith USB cables attached"></a>
+            <figcaption>Fig H8. - Display module and microSD socket wiring completewith USB cables attached</figcaption>
+          </figure>
+          <figure>
+            <a href="./images/setup-7.png" target="_blank"><img src="./images/setup-7.png" alt="Dev board to display module wiring (side 1)"></a>
+            <figcaption>Fig H9. - Dev board to display module wiring (side 1)</figcaption>
+          </figure>
+          <figure>
+            <a href="./images/setup-8.png" target="_blank"><img src="./images/setup-8.png" alt="Dev board to display module wiring (side 2)"></a>
+            <figcaption>Fig H10. - Dev board to display module wiring (side 2)</figcaption>
+          </figure>
+        </section>
+      </section>
+    </section>
+    <section>
+      <h1>Software</h1>
+      <section>
+        <h1>TREZOR Model T Open Source Software Main Repository</h1>
+        <ul>
+          <li><a href="https://github.com/trezor/trezor-core" target="_blank">https://github.com/trezor/trezor-core</a></li>
+        </ul>
+      </section>
+      <section>
+        <h1>Setup</h1>
+        <p>
+          This setup process comprises steps to install development and debugging tools on a temporary computer, then build and install a boardloader, bootloader, and firmware on the kit's MCU.<br>
+          The following setup process was documented while running an <a href="http://releases.ubuntu.com/releases/18.04/" target="_blank">Ubuntu 18.04 LTS Desktop (Bionic Beaver) Live CD</a> as user ubuntu.
+        </p>
+        <ol>
+          <li>Connect to the Internet</li>
+          <li>cd /tmp/</li>
+          <li>Install required software packages<br>
+            <ul>
+              <li>sudo add-apt-repository universe</li>
+              <li>sudo apt-get update</li>
+              <li>sudo apt-get -y install git openocd make scons python3-dev python3-pip cython3 libusb-1.0-0-dev libudev-dev libssl-dev protobuf-compiler libprotobuf-dev</li>
+              <li>sudo -H pip3 install pipenv trezor[ethereum,hidapi]</li>
+            </ul>
+          </li>
+          <li>Download tools<br>
+            <ul>
+              <li><a href="https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads" target="_blank">GNU ARM Embedded Toolchain</a><br>
+                <ul>
+                  <li>wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/7-2018q2/gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>Extract tools<br>
+            <ul>
+              <li>tar xjf gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2</li>
+            </ul>
+          </li>
+          <li>Add extracted tool binaries to PATH environment variable<br>
+            <ul>
+              <li>/bin/echo 'export PATH="/tmp/gcc-arm-none-eabi-7-2018-q2-update/bin:$PATH"' >> ~/.bashrc</li>
+              <li>source ~/.bashrc</li>
+            </ul>
+          </li>
+          <li>Setup udev rules to make the USB devices available to non-root users<br>
+            <ul>
+              <li>/bin/echo -e '# 0483:df11 STMicroelectronics STM Device in DFU Mode' > /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e 'SUBSYSTEM=="usb", ATTR{idVendor}=="0483", ATTR{idProduct}=="df11", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e '# 0483:3748 STMicroelectronics ST-LINK/V2' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e 'SUBSYSTEM=="usb", ATTR{idVendor}=="0483", ATTR{idProduct}=="3748", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e '# 0483:374b STMicroelectronics ST-LINK/V2.1 (Nucleo-F103RB)' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e 'SUBSYSTEM=="usb", ATTR{idVendor}=="0483", ATTR{idProduct}=="374b", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e '# 534c:0001 SatoshiLabs Bitcoin Wallet [TREZOR]' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e 'SUBSYSTEM=="usb", ATTR{idVendor}=="534c", ATTR{idProduct}=="0001", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e 'KERNEL=="hidraw*", ATTRS{idVendor}=="534c", ATTRS{idProduct}=="0001", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e '# 1209:53c0 SatoshiLabs TREZOR Model T Bootloader' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e 'SUBSYSTEM=="usb", ATTR{idVendor}=="1209", ATTR{idProduct}=="53c0", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e 'KERNEL=="hidraw*", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="53c0", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e '# 1209:53c1 SatoshiLabs TREZOR Model T' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e 'SUBSYSTEM=="usb", ATTR{idVendor}=="1209", ATTR{idProduct}=="53c1", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
+              <li>/bin/echo -e 'KERNEL=="hidraw*", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="53c1", MODE="0666"' >> /tmp/99-dev-kit.rules</li>
+              <li>sudo cp /tmp/99-dev-kit.rules /etc/udev/rules.d/</li>
+            </ul>
+          </li>
+          <li>Download, build, and flash the TREZOR Model T boardloader, bootloader, and firmware from source code to the kit's MCU<br>
+            <ul>
+              <li>Plug both of the USB cables from the dev board into your computer's USB ports.</li>
+              <li>git clone https://github.com/trezor/trezor-core.git</li>
+              <li>cd trezor-core/</li>
+              <li>make vendor</li>
+              <li>pipenv install</li>
+              <li>pipenv run make clean vendor build_boardloader build_bootloader build_firmware flash openocd_reset DISPLAY_ILI9341V=1 STLINK_VER=v2-1 OPTIMIZE=-Og</li>
+            </ul>
+          </li>
+          <li>Attach a debugger to the kit<br>
+              make openocd STLINK_VER=v2-1
+          </li>
+          <li>Open another terminal, then connect gdb to the OpenOCD process that was started in the previous step:<br>
+              make gdb_boardloader
+          </li>
+          <li>Set some test breakpoints and practice debugging code:<br>
+            <ul>
+              <li>(gdb) b *reset_handler</li>
+              <li>(gdb) b *main</li>
+              <li>(gdb) layout regs</li>
+              <li>(gdb) si</li>
+              <li>(gdb) c</li>
+              <li>(gdb) lay src</li>
+              <li>(gdb) i b</li>
+              <li>(gdb) d</li>
+              <li>(gdb) i b</li>
+              <li>(gdb) file build/bootloader/bootloader.elf</li>
+              <li>(gdb) b *main</li>
+              <li>(gdb) c</li>
+              <li>(gdb) Press Ctrl + C to interrupt software execution</li>
+              <li>(gdb) quit</li>
+            </ul>
+          </li>
+          <li>Done flashing the software to the dev board and debugging. Kill the OpenOCD process and unplug the debug adapter and dev board.</li>
+          <li>Test the software just loaded onto the dev board:<br>
+            <ul>
+              <li>Plug-in the dev board and progress past the unofficial/unsafe firmware warning.</li>
+              <li>cd /tmp/</li>
+              <li>git clone https://github.com/trezor/python-trezor.git</li>
+              <li>cd python-trezor/</li>
+              <li>git submodule update --init --recursive</li>
+              <li>python3 setup.py prebuild</li>
+              <li>./trezorctl wipe_device</li>
+              <li>./trezorctl reset_device -t 256 -r -p -l 'open innovation' -s</li>
+              <li>./trezorctl backup_device</li>
+              <li>./trezorctl get_address -c Bitcoin -t address -n "m/44'/0'/0'/0/0"<br>(note: this is a legacy base58 encoded p2pkh)</li>
+              <li>./trezorctl get_address -c Bitcoin -t p2shsegwit -n "m/49'/0'/0'/0/0"<br>(note: this is a base58 encoded p2wpkh-p2sh)</li>
+              <li>./trezorctl get_address -c Bitcoin -t segwit -n "m/84'/0'/0'/0/0"<br>(note: this is a bech32 encoded p2wpkh)</li>
+              <li>./trezorctl get_address -c Litecoin -t address -n "m/44'/2'/0'/0/0"</li>
+              <li>./trezorctl get_address -c Litecoin -t p2shsegwit -n "m/49'/2'/0'/0/0"</li>
+              <li>./trezorctl get_address -c Litecoin -t segwit -n "m/84'/2'/0'/0/0"</li>
+              <li>./trezorctl get_address -c Namecoin -t address -n "m/44'/7'/0'/0/0"</li>
+              <li> Now, set a custom homescreen:<br>
+                <ul>
+                  <li>cd /tmp/</li>
+                  <li>Copy the URL for one of these images and use it in the next "wget" step:</li>
+                  <li><img src="./images/trezor-t-homescreen-btc.png" alt="144px x 144px TREZOR Model T Homescreen Image"><img src="./images/trezor-t-homescreen-btc-lightning.png" alt="144px x 144px TREZOR Model T Homescreen Image"><img src="./images/trezor-t-homescreen-ltc.png" alt="144px x 144px TREZOR Model T Homescreen Image"><img src="./images/trezor-t-homescreen-ltc-2.png" alt="144px x 144px TREZOR Model T Homescreen Image"><img src="./images/trezor-t-homescreen-eff.png" alt="144px x 144px TREZOR Model T Homescreen Image"></li>
+                  <li>wget -O homescreen.png https://mcudev.github.io/trezor-model-t-dev-kit/images/trezor-t-homescreen-btc.png</li>
+                  <li>/tmp/trezor-core/tools/png2toi /tmp/homescreen.png</li>
+                  <li>/tmp/python-trezor/trezorctl set_homescreen -f /tmp/homescreen.toif</li>
+                </ul>
+              </li>
+          </li>
+          <li>
+            Your kit should look something like this after completing this tutorial (note that you can swipe the screen with your finger to change its orientation). Congratulations!<br>
+            <figure>
+              <a href="./images/done.png" target="_blank"><img src="./images/done.png" alt="The dev board after completing this tutorial"></a>
+              <figcaption>Fig S1. - The dev board after completing this tutorial</figcaption>
+            </figure>
+          </li>
+        </ol>
+      </section>
+      <section>
+        <h1>Questions</h1>
+        <ul>
+          <li>Q: Must I remove the SDRAM and TFT LCD + resistive touch panel that come attached to the STM32F429I-DISC1 dev board?<br>
+              A: No, removing those parts is optional.
+          </li>
+          <li>Q: How can I verify that the code I build will not lock the boardloader flash memory sectors and disable debug features?<br>
+              A: By default, the PRODUCTION variable is set to 0. Unless you set it to 1, the build will output binaries that will not lock your boardloader flash memory and disable debugging functions.<br>
+                 For more information, search the code repo for PRODUCTION, and/or see the function flash_set_option_bytes.
+          </li>
+        </ul>
+      </section>
+    </section>
+    <section>
+      <h1>Bonus</h1>
+      <section>
+        <h1>Bonus Developer Information</h1>
+        <p>
+          The awesome folks at SatoshiLabs were nice enough to provide me with some prototype development boards as the Model T was being developed.
+          This helped greatly with development because I could then code and test with the actual MCU and peripherals that were going to be used.
+          They even sent me a prototype body which is in the photos below.
+          These photos are included as extra bonus developer information because sometimes it is interesting and/or instructive to see the artifacts that are made and used throughout the development cycle of a product.
+          As an external contributor, I spent a lot of time developing with the dev kit documented by this tutorial, and then switched to the prototype boards for fine tuning and testing.
+        </p>
+        <figure>
+          <a href="./images/bonus-1.png" target="_blank"><img src="./images/bonus-1.png" alt="Prototype dev boards. 22AWG Solid Core Hook-up Wire is used to connect to the debug adapter."></a>
+          <figcaption>Fig B1. - Prototype dev boards. 22AWG Solid Core Hook-up Wire is used to connect to the debug adapter.</figcaption>
+        </figure>
+        <figure>
+          <a href="./images/bonus-2.png" target="_blank"><img src="./images/bonus-2.png" alt="Prototype dev boards (flipped)"></a>
+          <figcaption>Fig B2. - Prototype dev boards (flipped)</figcaption>
+        </figure>
+        <figure>
+          <a href="./images/bonus-3.png" target="_blank"><img src="./images/bonus-3.png" alt="Prototype dev boards (side). Display stuck to prototype board with double sided tape."></a>
+          <figcaption>Fig B3. - Prototype dev boards (side). Display stuck to prototype board with double sided tape.</figcaption>
+        </figure>
+        <figure>
+          <a href="https://raw.githubusercontent.com/trezor/trezor-core/master/docs/hardware/model-t-top-v10.png" target="_blank"><img src="https://raw.githubusercontent.com/trezor/trezor-core/master/docs/hardware/model-t-top-v10.png" alt="Prototype dev boards v10 (top)"></a>
+          <figcaption>Fig B4. - Prototype dev boards v10 (top)</figcaption>
+        </figure>
+        <figure>
+          <a href="https://raw.githubusercontent.com/trezor/trezor-core/master/docs/hardware/model-t-bottom-v10.png" target="_blank"><img src="https://raw.githubusercontent.com/trezor/trezor-core/master/docs/hardware/model-t-bottom-v10.png" alt="Prototype dev boards v10 (bottom)"></a>
+          <figcaption>Fig B5. - Prototype dev boards v10 (bottom)</figcaption>
+        </figure>
+      </section>
+    </section>
+  </body>
+</html>
