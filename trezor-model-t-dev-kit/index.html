@@ -258,6 +258,19 @@
               A: By default, the PRODUCTION variable is set to 0. Unless you set it to 1, the build will output binaries that will not lock your boardloader flash memory and disable debugging functions.<br>
                  For more information, search the code repo for PRODUCTION, and/or see the function flash_set_option_bytes.
           </li>
+          <li>Q: How do I use OpenOCD to connect under reset to the dev board?<br>
+              A: openocd -f board/stm32f429disc1.cfg -c "reset_config connect_assert_srst"
+                 For example, to connect under reset and prevent any code running from power on, perform this procedure:
+                 <ul>
+                   <li>Unplug the dev board</li>
+                   <li>Press and hold the reset button on the dev board</li>
+                   <li>Plug the dev board's USB cables into the host computer's USB ports</li>
+                   <li>openocd -f board/stm32f429disc1.cfg -c "reset_config connect_assert_srst"</li>
+                   <li>make gdb_boardloader</li>
+                   <li>Release the reset button</li>
+                   <li>For more info, see the <a href="http://openocd.org/doc/html/Reset-Configuration.html" target="_blank">OpenOCD documentation</a>.</li>
+                 </ul>
+          </li>
         </ul>
       </section>
     </section>
