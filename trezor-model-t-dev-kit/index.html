@@ -307,6 +307,34 @@
           <a href="https://raw.githubusercontent.com/trezor/trezor-core/master/docs/hardware/model-t-bottom-v10.jpg" target="_blank"><img src="https://raw.githubusercontent.com/trezor/trezor-core/master/docs/hardware/model-t-bottom-v10.jpg" alt="Prototype dev boards v10 (bottom)"></a>
           <figcaption>Fig B5. - Prototype dev boards v10 (bottom)</figcaption>
         </figure>
+        <p>
+          The ST-LINK debugger that is on the dev board can be used to debug an external application (e.g.- the prototype board).
+          To do this, remove/disconnect the dev board's jumpers on CN4 and wire the prototype board to the dev board's SWD pins on CN2.
+          Here is the pinout:
+        </p>
+        <table>
+          <tr><td>Description</td><td>Prototype Board SWD Pin</td><td>Debugger SWD Pin</td></tr>
+          <tr><td>SWD Clock (SWCLK)</td><td>4</td><td>2</td></tr>
+          <tr><td>GND</td><td>2</td><td>3</td></tr>
+          <tr><td>SWD I/O (SWDIO)</td><td>5</td><td>4</td></tr>
+          <tr><td>Reset (NRST)</td><td>1</td><td>5</td></tr>
+        </table>
+        <p>
+          One reason to do this is to be able to connect and debug under reset. The other pictured USB debug adapter does not support connecting under reset.
+          Below are some photos of the prototype board wired to the dev board debugger.
+        </p>
+        <figure>
+          <a href="./images/debug-1.jpg" target="_blank"><img src="./images/debug-1.jpg" alt="Prototype dev boards v12 wired to dev board debug adapter (bottom)"></a>
+          <figcaption>Fig B6. - Prototype dev boards v12 wired to dev board debug adapter (bottom)</figcaption>
+        </figure>
+        <figure>
+          <a href="./images/debug-2.jpg" target="_blank"><img src="./images/debug-2.jpg" alt="Prototype dev boards v12 wired to dev board debug adapter (top)"></a>
+          <figcaption>Fig B7. - Prototype dev boards v12 wired to dev board debug adapter (top)</figcaption>
+        </figure>
+        <figure>
+          <a href="./images/debug-3.jpg" target="_blank"><img src="./images/debug-3.jpg" alt="Prototype dev boards v12 wired to dev board debug adapter (side)"></a>
+          <figcaption>Fig B8. - Prototype dev boards v12 wired to dev board debug adapter (side)</figcaption>
+        </figure>
       </section>
     </section>
   </body>
