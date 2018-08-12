@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>TREZOR One Low Cost Dev Kit</title>
+    <link rel="stylesheet" href="../css/base.css">
+  </head>
+  <body>
+    <header>
+      <h1>TREZOR One Low Cost Dev Kit</h1>
+    </header>
+    <section>
+      <h1>Introduction</h1>
+      <p>This hobbyist project documents a kit that developers can use to explore, develop, test, and debug the open source TREZOR One hardware and software.</p>
+    </section>
+    <section>
+      <h1>Warning</h1>
+      <p>This kit does NOT produce a production TREZOR One cryptocurrency hardware wallet device.</p>
+      <p>If you want an official TREZOR One hardware wallet, see: <a href="https://shop.trezor.io/" target="_blank">https://shop.trezor.io/</a></p>
+      <p>When contrasted to official production hardware, this kit is less safe to use for non-development purposes.</p>
+      <p>For more details, see the other <a href="../trezor-dev-kit/index.html" target="_blank">TREZOR One Dev Kits</a>.</p>
+      <p>USE THIS KIT AT YOUR OWN RISK</p>
+    </section>
+    <section>
+      <h1>Hardware</h1>
+      <section>
+        <h1>Kit Contents</h1>
+        <ul>
+          <li>1 x <a href="https://www.aliexpress.com/item/STM32F4discovery-STM32F407VGT6-ARM-Cortex-M4-32bit-MCU-Core-Development-Board/32828318079.html" target="_blank">STM32F407 Dev Board</a> (male pin header included)</li>
+          <li>1 x ST-LINK V2 STM32 USB Debug Adapter</li>
+          <li>1 x 7-pin SPI 128x64 0.96 inch SSD1306 driven OLED Display Module</li>
+          <li>1 x USB Cable Type A Plug/Male to Type Micro-B Plug/Male</li>
+          <li>Female to female jumper wires with 0.1" header contacts</li>
+          <li>2 x 2.54mm pitch jumpers (optional)</li>
+        </ul>
+        <figure>
+          <a href="./images/low-cost-01.jpg" target="_blank"><img src="./images/low-cost-01.jpg" alt="The Dev Board (top)"></a>
+          <figcaption>Fig H1. - The Dev Board (top)</figcaption>
+        </figure>
+        <figure>
+          <a href="./images/low-cost-02.jpg" target="_blank"><img src="./images/low-cost-02.jpg" alt="The Dev Board (bottom)"></a>
+          <figcaption>Fig H2. - The Dev Board (bottom)</figcaption>
+        </figure>
+        <figure>
+          <a href="./images/low-cost-03.jpg" target="_blank"><img src="./images/low-cost-03.jpg" alt="Assembled Kit"></a>
+          <figcaption>Fig H3. - Assembled Kit</figcaption>
+        </figure>
+        <figure>
+          <a href="./images/low-cost-04.jpg" target="_blank"><img src="./images/low-cost-04.jpg" alt="Headers and Debug Adapter Attached"></a>
+          <figcaption>Fig H4. - Headers and Debug Adapter Attached</figcaption>
+        </figure>
+      </section>
+      <section>
+        <h1>About the Kit</h1>
+        <p>
+          The primary difference between this kit and <a href="../trezor-dev-kit/index.html" target="_blank">the other TREZOR One Dev Kits</a> is the low cost dev board used.
+          This kit is also more bare-bones since it relies on (un)attaching a jumper wire to simulate one of the user push buttons.
+          The dev board has one user push button (one the opposite side of the board from the USB connector) and one system reset push button (adjacent to the USB connector).
+          A normal TREZOR One device has two user push buttons and no reset push button.
+          The second user push button (that is mostly used as a "cancel" option) is sacrificed because it is not crucial for most uses. If you get into a case where you need to cancel, you can just unplug the device or use the system reset push button.
+          One function that requires both user push buttons is the boot into firmware update mode.
+          In this case, wire the pin for the second user button (PC5) to GND/ground.
+          Both user push buttons are active-low.
+          That is why wiring to GND works to simulate pressing the button.
+          Also, the user push button is connected to PD15 on the dev board.
+          Connect the pin for user push button 1 (PC2) to pin PD15 with a jumper wire so that you can use the button without changing the software.
+          The two yellow things on the BOOT pins in the pictures are jumpers that connect the BOOT0 and BOOT1 pins to GND.
+          They are just a nicety to reduce the number of wires hanging around.
+          Two female to female jumper wires may be used instead.
+          As can be seen in the pictures, you may solder the pin header to either side of the dev board.
+        </p>
+        <p>
+          One key difference between this kit and production hardware is the microcontroller (MCU) used.
+          Production hardware uses the STM32F205RET6 MCU and these kits use the STM32F407VGT6 MCU.
+          The former is an ARM&reg; Cortex&reg;-M3 and the latter is an ARM&reg; Cortex&reg;-M4.
+          The Cortex-M4 architecture is a backwards compatible superset of Cortex-M3. The additional features, like hard float capability, do not matter for this project.
+          The STM32F407VGT6 has 1MB of flash memory (vs the 205's 512KB), a core clock frequency adjustable up to 168MHz (including the 205's 120MHz; with matching clock tree), and 128KB of SRAM (same as the 205; the 407 has an additional 64KB of CCMRAM, giving it 192KB of usable RAM).
+          The STM32F407VGT6 is pin-to-pin compatible with the STM32F205RET6 and uses the same TRNG (reference: STM32F407xx datasheet section 2.1, and AN4230 section 1.2.1).
+        </p>
+        <p>The dev board has an 8MHz high-speed external (HSE) crystal (matching the reference hardware), a STM32F407VGT6 MCU, a USB connector, a user push button, a reset push button, power circuitry, SWD debug interface, boot mode select pins, and all the pins needed, broken out and available for use.</p>
+      </section>
+      <section>
+        <h1>Setup</h1>
+        <section>
+          <h1>Wiring the Debug Adapter to the Dev Board</h1>
+          <p>
+            Connect the debug adapter's SWDIO, SWCLK, and GND pins to the dev board's PA13, PA14, and GND pins, respectively.
+          </p>
+        </section>
+        <section>
+          <h1>Setting Dev Board Jumpers and Switches</h1>
+          <p>Connect the BOOT0 and BOOT1 pins to GND. See the two yellow jumpers in the pictures. If left disconnected, the BOOT0 and BOOT1 pins will be pulled high. Sometimes this is useful for accessing the DFU bootloader, or to boot from SRAM instead of flash memory.</p>
+        </section>
+        <section>
+          <h1>Wiring the Dev Board to the Breadboard Display and Switches</h1>
+          <p>Pins on the dev board are documented by the silkscreen. Pins on the display module are also documented by silkscreen.</p>
+          <table>
+            <tr><th>Dev Board Pin</th><th>Breadboard Pin</th><th>Alternate Name</th><th>Comment</th></tr>
+            <tr><td>PC5</td><td>Button 2</td><td></td><td>Connect jumper wire to pin and leave the other side until needed. When necessary, attach and unattach to GND to simulate pressing and releasing the button; button is Active-Low</td></tr>
+            <tr><td>PA4</td><td>CS</td><td>Chip Select</td><td>Pin 7 on Pictured Display</td></tr>
+            <tr><td>PB0</td><td>DC</td><td>Data/Command</td><td>Pin 6 on Pictured Display</td></tr>
+            <tr><td>PB1</td><td>RES</td><td>Reset</td><td>Pin 5 on Pictured Display</td></tr>
+            <tr><td>PA7</td><td>SDA</td><td>MOSI</td><td>Pin 4 on Pictured Display</td></tr>
+            <tr><td>PA5</td><td>SCK</td><td>SCLK</td><td>Pin 3 on Pictured Display</td></tr>
+            <tr><td>3.3V</td><td>VDD</td><td>3V3</td><td>Pin 2 on Pictured Display</td></tr>
+            <tr><td>GND</td><td>GND</td><td>Ground</td><td>Pin 1 on Pictured Display</td></tr>
+            <tr><td>PC2</td><td>Button 1</td><td></td><td>Connect jumper wire from PC2 to PD15; button is Active-Low</td></tr>
+          </table>
+          <br>
+        </section>
+      </section>
+    </section>
+  </body>
+</html>
+
