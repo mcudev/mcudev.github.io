@@ -161,11 +161,12 @@
         <h1>About the Kits</h1>
         <p>
           One key difference between these kits and production hardware is the microcontroller (MCU) used.
-          Production hardware uses the STM32F205RET6 MCU and these kits use the STM32F405RGT6 MCU.
+          Production hardware uses the STM32F205RET6 (and more recently, the STM32F205RGT6) MCU and these kits use the STM32F405RGT6 MCU.
+          Note: the STM32F205RET6 is documented to have 512KB of flash memory, but it actually has 1MB. Apparently, it is more cost efficient for ST to not develop different chip-wafers.
           The former is an ARM&reg; Cortex&reg;-M3 and the latter is an ARM&reg; Cortex&reg;-M4.
           The Cortex-M4 architecture is a backwards compatible superset of Cortex-M3. The additional features, like hard float capability, do not matter for this project.
-          The STM32F405RGT6 has 1MB of flash memory (vs the 205's 512KB), a core clock frequency adjustable up to 168MHz (including the 205's 120MHz; with matching clock tree), and 128KB of SRAM (same as the 205; the 405 has an additional 64KB of CCMRAM, giving it 192KB of usable RAM).
-          The STM32F405RGT6 is pin-to-pin compatible with the STM32F205RET6 and uses the same TRNG (reference: STM32F405xx datasheet section 2.1, and AN4230 section 1.2.1).
+          The STM32F405RGT6 has 1MB of flash memory, a core clock frequency adjustable up to 168MHz (including the 205's 120MHz; with matching clock tree), and 128KB of SRAM (same as the 205; the 405 has an additional 64KB of CCMRAM, giving it 192KB of usable RAM).
+          The STM32F405RGT6 is pin-to-pin compatible with the STM32F205RET6/STM32F205RGT6 and uses the same TRNG (reference: STM32F405xx datasheet section 2.1, and AN4230 section 1.2.1).
         </p>
         <p>The Waveshare Core405R dev board has an 8MHz high-speed external (HSE) crystal (matching the reference hardware), a STM32F405RGT6 MCU, a USB connector, power circuitry, SWD debug interface, boot mode select switch, and all the pins needed, broken out and available for use.</p>
       </section>
