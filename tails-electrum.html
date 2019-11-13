@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>Using Trezor with Electrum on Tails 4.0</title>
+    <link rel="stylesheet" href="./css/base.css">
+  </head>
+  <body>
+    <header>
+      <h1>Using Trezor with Electrum on Tails 4.0</h1>
+    </header>
+    <section>
+      <h1>Introduction</h1>
+      <p>Tails 4.0 ships with the latest Electrum 3.3.8 Bitcoin wallet software. Electrum supports hardware wallets such as the Trezor Model T, however those integrations do not work out of the box. This article covers the handful of steps necessary to get the Electrum hardware wallet integration for the Trezor Model T setup and working on a Tails 4.0 Live session.</p>
+    </section>
+    <section>
+      <h1>The Steps</h1>
+      <ul>
+        <li>On the initial Tails setup screen, set an administrative password. This is necessary since root privileges are needed to install some software packages later in the process.</li>
+        <li>Once the Tails Live finishes starting up, setup your network as usual.</li>
+        <li>Open a terminal and run the following commands
+          <ul>
+            <li>sudo apt-get update</li>
+            <li>sudo apt-get install build-essential python3-dev python3-pip python3-setuptools python3-wheel</li>
+            <li>pip3 install --user --upgrade trezor[ethereum,hidapi] --proxy='socks5://127.0.0.1:9050'</li>
+            <li>wget -O /tmp/51-trezor.rules https://raw.githubusercontent.com/trezor/trezor-common/master/udev/51-trezor.rules</li>
+            <li>sudo mv /tmp/51-trezor.rules /etc/udev/rules.d/</li>
+          </ul>
+        </li>
+        <li>Connect your Trezor Model T device to the computer's USB port.</li>
+        <li>Verify that the udev rule changes took effect by running<br>ls -al /dev/trezor*</li>
+        <li>Start Electrum and setup a wallet using your hardware wallet as usual</li>
+      </ul>
+    </section>
+    <section>
+      <h1>Notes</h1>
+      <p>In the Tails distribution, the wget command used above is actually a shell script that configures wget to fetch the file over Tor instead of clearnet.</p>
+    </section>
+  </body>
+</html>
+
