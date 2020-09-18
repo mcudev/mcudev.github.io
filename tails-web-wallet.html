@@ -24,7 +24,7 @@
             <li>wget https://wallet.trezor.io/data/bridge/2.0.29/trezor-bridge_2.0.29_amd64.deb</li>
             <li>gpg --verify trezor-bridge_2.0.29_amd64.deb</li>
             <li>sudo dpkg -i trezor-bridge_2.0.29_amd64.deb</li>
-            <li>sudo /sbin/iptables -I OUTPUT 3 -o lo -s 127.0.0.1/32 -d 127.0.0.1/32 -p tcp --syn --dport 21325 -m owner --uid-owner amnesia -j ACCEPT</li>
+            <li>sudo /sbin/iptables -I OUTPUT 3 -o lo -s 127.0.0.1/32 -d 127.0.0.1/32 -p tcp --syn --dport 21325 -m owner --uid-owner amnesia -m conntrack --ctstate NEW -j ACCEPT</li>
           </ul>
         </li>
         <li>Navigate to https://wiki.trezor.io/Tor in Tor Browser and follow the instructions to change the FireFox configuration. Since Tails 4.10 uses Tor Browser 9.5.4, only the configuration for network.proxy.no_proxies_on needs to be set to 127.0.0.1:21325.</li>
