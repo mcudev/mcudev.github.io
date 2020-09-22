@@ -2,15 +2,15 @@
 <html lang="en-US">
   <head>
     <meta charset="utf-8">
-    <title>Using the Trezor web wallet with Tor Browser on Tails 4.10 Live</title>
+    <title>Using the Trezor web wallet with Tor Browser on Tails 4.11 Live</title>
     <link rel="stylesheet" href="./css/base.css">
   </head>
   <body>
     <header>
-      <h1>Using the <a href="https://wallet.trezor.io/" target="_blank" rel="noopener noreferrer">Trezor web wallet</a> with Tor Browser on Tails 4.10 Live</h1>
+      <h1>Using the <a href="https://wallet.trezor.io/" target="_blank" rel="noopener noreferrer">Trezor web wallet</a> with Tor Browser on Tails 4.11 Live</h1>
     </header>
     <section>
-      <p>This article presents the handful of steps necessary to get the Trezor web wallet (https://wallet.trezor.io/) to work with Tor Browser on a Tails 4.10 Live session.</p>
+      <p>This article presents the handful of steps necessary to get the Trezor web wallet (https://wallet.trezor.io/) to work with Tor Browser on a Tails 4.11 Live session.</p>
     </section>
     <section>
       <ul>
@@ -27,7 +27,7 @@
             <li>sudo /sbin/iptables -I OUTPUT 3 -o lo -s 127.0.0.1/32 -d 127.0.0.1/32 -p tcp --syn --dport 21325 -m owner --uid-owner amnesia -m conntrack --ctstate NEW -j ACCEPT</li>
           </ul>
         </li>
-        <li>Navigate to https://wiki.trezor.io/Tor in Tor Browser and follow the instructions to change the FireFox configuration. Since Tails 4.10 uses Tor Browser 9.5.4, only the configuration for network.proxy.no_proxies_on needs to be set to 127.0.0.1:21325.</li>
+        <li>Navigate to https://wiki.trezor.io/Tor in Tor Browser and follow the instructions to change the FireFox configuration. Since Tails 4.11 uses Tor Browser 10.0, only the configuration for network.proxy.no_proxies_on needs to be set to 127.0.0.1:21325.</li>
         <li>Connect your Trezor device to the computer's USB port.</li>
         <li>After unlocking and entering your Trezor's PIN, verify that the udev rules took effect by running<br>ls -al /dev/trezor*</li>
         <li>Start Tor Browser and navigate to https://wallet.trezor.io/</li>
@@ -42,4 +42,3 @@
     </section>
   </body>
 </html>
-
